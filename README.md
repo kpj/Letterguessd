@@ -1,0 +1,65 @@
+# Letterguessd
+
+A Letterboxd-inspired daily movie guessing game. Guess the movie based on popular reviews!
+
+## Gameplay
+
+1. You are presented with one review at a time.
+2. Guess the movie title in the input box.
+3. If your guess is wrong or you skip, the next review is revealed.
+4. You have **10 guesses** total.
+5. Win by guessing the movie correctly!
+
+## How to Run
+
+### Setup
+
+Create a `.env` file in the root directory and add your Gemini API key:
+```env
+GEMINI_API_KEY=<key>
+```
+
+### Generate Daily Data
+
+Run the scraper to fetch the latest popular movies and curate reviews using Gemini:
+```bash
+uv run scraper.py
+```
+This will generate or update `daily_data.json` with 7 fresh movies.
+
+### Start the Game
+
+Since this is a static site, you can host it using any local web server. The simplest way is using Python's built-in server:
+```bash
+python3 -m http.server 8000
+````
+Then, open your browser and navigate to:
+**[http://localhost:8000](http://localhost:8000)**
+
+## Deployment
+
+### 1. Configure Daily Updates
+
+The repository includes a GitHub Action (`.github/workflows/daily_scrape.yml`) that automatically scrapes new data and deploys the entire site to the `gh-pages` branch.
+
+To enable this, you must add your Gemini API key to GitHub:
+1. Go to **Settings > Secrets and variables > Actions**.
+2. Create a **New repository secret**.
+3. Name: `GEMINI_API_KEY`
+4. Value: Paste your Gemini API key.
+
+### 2. Enable GitHub Pages
+
+Once the first action run completes, a `gh-pages` branch will be created automatically.
+1. In your GitHub repository, go to **Settings > Pages**.
+2. Set the **Source** to "Deploy from a branch".
+3. Select **Branch: `gh-pages`** and **Folder: `/ (root)`**.
+
+Once configured, the game will be live and will update itself with new movies automatically.
+
+## Code Formatting
+
+```bash
+uv run ruff check --select I --fix scraper.py
+uv run ruff format scraper.py
+```
