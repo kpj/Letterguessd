@@ -57,9 +57,38 @@ header p {
     letter-spacing: 1px;
 }
 
-.lb-green { color: var(--lb-green); }
-.lb-blue { color: var(--lb-blue); }
-.lb-orange { color: var(--lb-orange); }
+.lb-green {
+    color: var(--lb-green);
+}
+
+.lb-blue {
+    color: var(--lb-blue);
+}
+
+.lb-orange {
+    color: var(--lb-orange);
+}
+
+.help-btn {
+    width: 24px;
+    height: 24px;
+    background: none;
+    padding: 0;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    transition: all 0.2s;
+}
+
+.help-btn:hover {
+    color: var(--lb-blue);
+    border-color: var(--lb-blue);
+    background: rgba(64, 188, 244, 0.1);
+}
 
 .stats-bar {
     display: flex;
@@ -86,10 +115,10 @@ header p {
     background: var(--panel-bg-glass);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     opacity: 0;
     transform: translateY(20px);
     animation: slideUp 0.4s ease forwards;
@@ -230,8 +259,13 @@ button:disabled {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .hidden {
@@ -271,7 +305,7 @@ button:disabled {
     display: block;
     max-width: 200px;
     border-radius: 6px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     margin: 0 auto 1.5rem;
     animation: fadeIn 0.5s ease forwards;
 }
@@ -291,4 +325,56 @@ button:disabled {
     margin-top: 1rem;
     color: var(--lb-blue);
     font-size: 0.9rem;
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    max-width: 450px;
+    width: 90%;
+    position: relative;
+    padding: 2.5rem;
+    text-align: left;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.modal-content h2 {
+    color: var(--lb-green);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.help-steps p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.help-steps strong {
+    color: var(--text-highlight);
+}
+
+#close-help-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
 }

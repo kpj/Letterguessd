@@ -23,6 +23,7 @@
         <main id="game-board">
             <div class="stats-bar">
                 <span id="guesses-remaining">Guesses left: <span class="highlight">10</span></span>
+                <button id="help-button" class="help-btn" title="How to play">?</button>
             </div>
 
             <div id="reviews-container">
@@ -33,7 +34,7 @@
                 <form id="guess-form">
                     <input type="text" id="guess-input" placeholder="Guess a movie..." autocomplete="off">
                     <button type="submit" id="guess-button">Guess</button>
-                    <button type="button" id="skip-button" class="secondary-btn">Skip</button>
+                    <button type="button" id="skip-button" class="secondary-btn">Next</button>
                 </form>
                 <div id="feedback-message" class="hidden"></div>
             </div>
@@ -54,6 +55,21 @@
                 <div id="share-toast" class="hidden">Copied to clipboard!</div>
             </div>
         </main>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <span class="close-modal">&times;</span>
+            <h2>How to Play</h2>
+            <div class="help-steps">
+                <p>1. You are shown a <strong>review</strong> from Letterboxd for a randomly selected movie.</p>
+                <p>2. Try to <strong>guess the title</strong> in the input box.</p>
+                <p>3. Each <strong>wrong guess</strong> or <strong>next review</strong> reveals another hint.</p>
+                <p>4. You have <strong>10 attempts</strong> to correctly identify the movie!</p>
+            </div>
+            <button id="close-help-btn">Got it!</button>
+        </div>
     </div>
 </body>
 

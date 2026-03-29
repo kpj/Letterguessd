@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const sharePreview = document.getElementById('share-preview');
     const endStats = document.getElementById('end-stats');
 
+    // Help Modal elements
+    const helpButton = document.getElementById('help-button');
+    const helpModal = document.getElementById('help-modal');
+    const closeHelpBtn = document.getElementById('close-help-btn');
+    const closeModalX = document.querySelector('.close-modal');
+
     const MAX_GUESSES = 10;
 
     let gameData = null;       // the selected movie object
@@ -125,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Wrong/skip — show feedback and reveal next review
-        feedbackMessage.textContent = isSkip ? 'Skipped.' : 'Incorrect!';
+        feedbackMessage.textContent = isSkip ? 'Next hint revealed.' : 'Incorrect!';
         feedbackMessage.className = 'feedback-error';
         setTimeout(() => feedbackMessage.classList.add('hidden'), 2000);
 
@@ -200,5 +206,21 @@ document.addEventListener('DOMContentLoaded', () => {
             shareToast.classList.remove('hidden');
             setTimeout(() => shareToast.classList.add('hidden'), 2500);
         });
+    });
+
+    // Help Modal Logic
+    if (helpButton && helpModal) {
+        helpButton.addEventListener('click', () => {
+            helpModal.classList.remove('hidden');
+        });
+    }
+
+    const closeHelp = () => {
+        if (helpModal) helpModal.classList.add('hidden');
+    };
+    closeHelpBtn.addEventListener('click', closeHelp);
+    closeModalX.addEventListener('click', closeHelp);
+    window.addEventListener('click', (e) => {
+        if (e.target === helpModal) closeHelp();
     });
 });
