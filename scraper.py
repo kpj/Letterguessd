@@ -11,18 +11,36 @@ from bs4 import BeautifulSoup
 from google import genai
 
 
-def get_movies(scraper):
-    url = "https://letterboxd.com/films/"
-    req = scraper.get(url)
-    if req.status_code != 200:
-        raise RuntimeError(f"Failed to fetch popular films: HTTP {req.status_code}")
+def get_movies(scraper, url):
+    all_movies = []
+    current_url = url
 
-    soup = BeautifulSoup(req.text, "html.parser")
-    movies = soup.select("div[data-target-link]")
-    if not movies:
-        raise RuntimeError(f"No films found on {url}.")
+    while current_url:
+        print(f"Fetching movies from {current_url}...")
+        req = scraper.get(current_url)
+        if req.status_code != 200:
+            print(f"Warning: Failed to fetch {current_url}: HTTP {req.status_code}")
+            break
 
-    return movies
+        soup = BeautifulSoup(req.text, "html.parser")
+        movies = soup.select("div[data-target-link]")
+        all_movies.extend(movies)
+        print(f"  Found {len(movies)} movies on this page.")
+
+        # Check for next page
+        pagination = soup.select_one(".pagination")
+        next_link = pagination.select_one("a.next") if pagination else None
+        if next_link:
+            next_href = next_link.get("href")
+            current_url = f"https://letterboxd.com{next_href}"
+            time.sleep(1)
+        else:
+            current_url = None
+
+    if not all_movies:
+        raise RuntimeError(f"No films found at {url}.")
+
+    return all_movies
 
 
 def llm_filter_reviews(reviews_data, title, year):
