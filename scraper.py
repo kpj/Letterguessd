@@ -109,7 +109,7 @@ def llm_filter_reviews(reviews_data, title, year):
                 return None
 
 
-def process_movie(scraper, movie_el, used_titles):
+def process_movie(scraper, movie_el, used_titles, bypass_llm=False):
     """Fetch + LLM-filter reviews for one movie. Returns a dict or None."""
     target_link = movie_el.get("data-target-link")
     full_name = movie_el.get("data-item-full-display-name")
@@ -186,7 +186,14 @@ def process_movie(scraper, movie_el, used_titles):
     if len(reviews_data) < 10:
         return None
 
-    final_reviews = llm_filter_reviews(reviews_data[:30], title, year)
+    if bypass_llm:
+        print("  Bypassing LLM, using first 10 reviews.")
+        final_reviews = [
+            {"text": text, "author": author} for text, author in reviews_data[:10]
+        ]
+    else:
+        final_reviews = llm_filter_reviews(reviews_data[:30], title, year)
+
     if not final_reviews:
         return None
 
@@ -211,6 +218,11 @@ def main():
         type=int,
         default=7,
         help="Number of movies to collect",
+    )
+    parser.add_argument(
+        "--no-llm",
+        action="store_true",
+        help="Bypass Gemini LLM and use first 10 reviews as fallback",
     )
     args = parser.parse_args()
 
@@ -240,7 +252,7 @@ def main():
         movie_scraper = cloudscraper.create_scraper(
             browser={"browser": "chrome", "platform": "windows", "mobile": False}
         )
-        movie_data = process_movie(movie_scraper, movie_el, used_titles)
+        movie_data = process_movie(movie_scraper, movie_el, used_titles, args.no_llm)
         if movie_data:
             collected.append(movie_data)
             used_titles.add(movie_data["title"])

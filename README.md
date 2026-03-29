@@ -27,6 +27,10 @@ Run the scraper to fetch the latest popular movies and curate reviews using Gemi
 ```bash
 uv run scraper.py --count 7 --url https://letterboxd.com/films/
 ```
+You can also bypass Gemini AI and use a simple fallback selection (useful for testing):
+```bash
+uv run scraper.py --no-llm
+```
 This will generate or update `movie_data.json` with 7 fresh movies.
 
 ### Start the Game
