@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load data
-    fetch('daily_data.json')
+    fetch('movie_data.json')
         .then(res => res.json())
         .then(data => {
             if (!data.movies || data.movies.length === 0) {
-                throw new Error('No movies found in daily data.');
+                throw new Error('No movies found in data.');
             }
             const idx = getDayIndex(data.movies.length);
             gameData = data.movies[idx];
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initGame();
         })
         .catch(err => {
-            console.error('Failed to load daily data:', err);
+            console.error('Failed to load movie data:', err);
             feedbackMessage.textContent = 'Error loading game data. Please try again later.';
             feedbackMessage.className = 'feedback-error';
         });

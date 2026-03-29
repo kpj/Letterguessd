@@ -1,6 +1,6 @@
 # Letterguessd
 
-A Letterboxd-inspired daily movie guessing game. Guess the movie based on popular reviews!
+A Letterboxd-inspired movie guessing game. Guess the movie based on popular reviews!
 
 ## Gameplay
 
@@ -19,13 +19,13 @@ Create a `.env` file in the root directory and add your Gemini API key:
 GEMINI_API_KEY=<key>
 ```
 
-### Generate Daily Data
+### Generate Movie Data
 
 Run the scraper to fetch the latest popular movies and curate reviews using Gemini:
 ```bash
 uv run scraper.py
 ```
-This will generate or update `daily_data.json` with 7 fresh movies.
+This will generate or update `movie_data.json` with 7 fresh movies.
 
 ### Start the Game
 
@@ -38,9 +38,9 @@ Then, open your browser and navigate to:
 
 ## Deployment
 
-### 1. Configure Daily Updates
+### 1. Configure Automated Updates
 
-The repository includes a GitHub Action (`.github/workflows/daily_scrape.yml`) that automatically scrapes new data and deploys the entire site to the `gh-pages` branch.
+The repository includes a GitHub Action (`.github/workflows/scrape.yml`) that automatically scrapes new data and deploys the entire site to the `gh-pages` branch.
 
 To enable this, you must add your Gemini API key to GitHub:
 1. Go to **Settings > Secrets and variables > Actions**.

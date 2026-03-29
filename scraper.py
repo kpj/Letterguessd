@@ -220,10 +220,10 @@ def main(num_movies=7):
         raise RuntimeError("Could not gather any movies with sufficient reviews.")
 
     out_data = {"movies": collected}
-    with open("daily_data.json", "w") as f:
+    with open("movie_data.json", "w") as f:
         json.dump(out_data, f, indent=2)
 
-    print(f"\nSaved daily_data.json with {len(collected)} movies.")
+    print(f"\nSaved movie_data.json with {len(collected)} movies.")
 
 
 if __name__ == "__main__":
