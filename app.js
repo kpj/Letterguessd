@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateShareText() {
         const score = hasWon ? guessesMade : 'X';
-        return `Letterguessd ${score}/${MAX_GUESSES}\n${buildSquares()}\nhttps://kpj.github.io/Letterguessd/`;
+        return `Letterguessd ${score}/${MAX_GUESSES}\n${buildSquares()}\n${window.location.href}`;
     }
 
     guessForm.addEventListener('submit', e => {
