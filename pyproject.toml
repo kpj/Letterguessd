@@ -8,6 +8,7 @@ dependencies = [
     "beautifulsoup4>=4.14.3",
     "cloudscraper>=1.2.71",
     "google-genai>=1.68.0",
+    "letterboxdpy>=6.5.0",
     "python-dotenv>=1.2.2",
     "requests>=2.33.0",
 ]
