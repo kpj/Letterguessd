@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load data
-    console.log(window.location.hostname)
     const isLocal = ['localhost', '127.0.0.1', '[::]', ''].includes(window.location.hostname);
     const DATA_URL = isLocal
         ? 'movie_data.json'
