@@ -9,6 +9,7 @@ dependencies = [
     "cloudscraper>=1.2.71",
     "google-genai>=1.68.0",
     "letterboxdpy>=6.5.0",
+    "loguru>=0.7.3",
     "python-dotenv>=1.2.2",
     "requests>=2.33.0",
 ]

@@ -10,6 +10,7 @@ import dotenv
 from google import genai
 from letterboxdpy.core.scraper import Scraper
 from letterboxdpy.movie import Movie
+from loguru import logger
 
 
 class ReviewCurator:
@@ -67,13 +68,13 @@ class ReviewCurator:
         """Use Gemini AI to select the best 10 puzzle clues from the review pool."""
         # Pre-filter to save tokens
         working_pool = self._pre_filter_reviews(reviews_data, title)
-        print(
-            f"  Pre-filtered pool: {len(working_pool)} reviews (was {len(reviews_data)})"
+        logger.debug(
+            f"Pre-filtered pool: {len(working_pool)} reviews (was {len(reviews_data)})"
         )
 
         if len(working_pool) < 10:
-            print(
-                f"  Skipping {title}: insufficient valid reviews after pre-filtering."
+            logger.warning(
+                f"Skipping {title}: insufficient valid reviews after pre-filtering."
             )
             return None
 
@@ -145,21 +146,21 @@ class ReviewCurator:
 
                 # If count < 10, remove the failed ones from our pool and retry
                 if failed_texts:
-                    print(
-                        f"  Attempt {attempt + 1} rejected {len(failed_texts)} reviews. Retrying..."
+                    logger.warning(
+                        f"Attempt {attempt + 1} rejected {len(failed_texts)} reviews. Retrying..."
                     )
                     working_pool = [r for r in working_pool if r[0] not in failed_texts]
                 else:
-                    print(
-                        f"  Attempt {attempt + 1} only returned {len(valid)} reviews (expected 10). Retrying..."
+                    logger.warning(
+                        f"Attempt {attempt + 1} only returned {len(valid)} reviews (expected 10). Retrying..."
                     )
 
                 if len(working_pool) < 10:
-                    print("  Working pool exhausted below 10 reviews.")
+                    logger.warning("Working pool exhausted below 10 reviews.")
                     break
 
             except Exception as e:
-                print(f"  LLM attempt {attempt + 1} failed: {e}")
+                logger.error(f"LLM attempt {attempt + 1} failed: {e}")
                 time.sleep(2)
 
         return None
@@ -174,7 +175,7 @@ class MovieProvider:
         slugs, current_url = set(), url
 
         while current_url:
-            print(f"Fetching slugs from {current_url}...")
+            logger.info(f"Fetching slugs from {current_url}...")
             try:
                 dom = Scraper.get_page(current_url)
                 poster_divs = dom.select("div[data-target-link]")
@@ -184,7 +185,7 @@ class MovieProvider:
                         slug = target.strip("/").split("/")[-1]
                         slugs.add(slug)
 
-                print(f"  Found {len(poster_divs)} movies on this page.")
+                logger.info(f"Found {len(poster_divs)} movies on this page.")
                 next_link = dom.select_one(".pagination a.next")
                 current_url = (
                     f"https://letterboxd.com{next_link.get('href')}"
@@ -194,7 +195,7 @@ class MovieProvider:
                 if current_url:
                     time.sleep(1)
             except Exception as e:
-                print(f"Warning: Failed to fetch {current_url}: {e}")
+                logger.warning(f"Failed to fetch {current_url}: {e}")
                 break
 
         if not slugs:
@@ -208,7 +209,7 @@ class MovieProvider:
 
         for page in range(1, max_pages + 1):
             url = f"https://letterboxd.com/film/{movie_slug}/reviews/by/activity/page/{page}/"
-            print(f"  Fetching reviews page {page}...")
+            logger.info(f"Fetching reviews page {page}...")
             try:
                 dom = Scraper.get_page(url)
                 articles = dom.select("article.production-viewing")
@@ -236,7 +237,7 @@ class MovieProvider:
                     break
                 time.sleep(1.5)
             except Exception as e:
-                print(f"    Error: {e}")
+                logger.error(f"Error: {e}")
                 break
         return reviews_data
 
@@ -246,17 +247,17 @@ class MovieProvider:
         try:
             m = Movie(slug)
             title, year = m.title, m.year
-            print(f"Processing: {title} ({year})")
+            logger.info(f"Processing: {title} ({year})")
 
             reviews = self.fetch_paginated_reviews(slug)
-            print(f"  Collected {len(reviews)} valid reviews.")
+            logger.info(f"Collected {len(reviews)} valid reviews.")
 
             if len(reviews) < 10:
-                print(f"  Skipping {title}: insufficient reviews.")
+                logger.warning(f"Skipping {title}: insufficient reviews.")
                 return None
 
             if not curator:
-                print("  Bypassing LLM (fallback to first 10 reviews).")
+                logger.info("Bypassing LLM (fallback to first 10 reviews).")
                 final_reviews = [{"text": t, "author": a} for t, a in reviews[:10]]
             else:
                 final_reviews = curator.curate_reviews(title, year, reviews[:30])
@@ -272,7 +273,7 @@ class MovieProvider:
                 "reviews": final_reviews,
             }
         except Exception as e:
-            print(f"  Error processing {slug}: {e}")
+            logger.error(f"Error processing {slug}: {e}")
             return None
 
 
@@ -306,7 +307,7 @@ class ScraperApp:
             if data:
                 collected.append(data)
                 used_slugs.add(slug)
-                print(f"Added ({len(collected)}/{self.count})")
+                logger.success(f"Added ({len(collected)}/{self.count})")
             else:
                 time.sleep(2)
 
@@ -314,7 +315,7 @@ class ScraperApp:
             raise RuntimeError("No movies gathered.")
 
         self._save_results(collected)
-        print(f"\nSuccess: Saved {len(collected)} movies to movie_data.json.")
+        logger.success(f"Saved {len(collected)} movies to movie_data.json.")
 
     @staticmethod
     def _save_results(collected):
