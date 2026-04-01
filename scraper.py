@@ -20,10 +20,34 @@ class ReviewCurator:
             raise RuntimeError("GEMINI_API_KEY not set.")
         self.client = genai.Client(api_key=api_key)
 
+    @staticmethod
+    def _post_llm_checks(reviews, title, original_texts):
+        """Filter out reviews that fail sanity checks after LLM selection."""
+        title_lower = title.lower()
+        title_no_year = re.sub(r'\s*\(\d{4}\)\s*$', '', title_lower).strip()
+
+        valid = []
+        for r in reviews:
+            # Must have non-empty text and author
+            if not isinstance(r.get("text"), str) or not r["text"].strip():
+                continue
+            if not isinstance(r.get("author"), str) or not r["author"].strip():
+                continue
+            # Must not contain the movie title (with or without year)
+            text_lower = r["text"].lower()
+            if title_lower in text_lower or title_no_year in text_lower:
+                continue
+            # Text must not have been modified by the LLM
+            if r["text"] not in original_texts:
+                continue
+            valid.append(r)
+        return valid
+
     def curate_reviews(self, title, year, reviews_data):
         """Use Gemini AI to select the best 10 puzzle clues from the review pool."""
         print(f"Using LLM to filter reviews for '{title}'...")
 
+        original_texts = {text for text, _ in reviews_data}
         reviews_input = [
             f"[{i}] Author: {a}\nReview: {t}" for i, (t, a) in enumerate(reviews_data)
         ]
@@ -67,7 +91,9 @@ class ReviewCurator:
                     filtered = filtered["reviews"]
 
                 if isinstance(filtered, list) and len(filtered) >= 10:
-                    return filtered[:10]
+                    filtered = self._post_llm_checks(filtered, title, original_texts)
+                    if len(filtered) >= 10:
+                        return filtered[:10]
 
                 raise ValueError(f"Invalid LLM response format or count: {response}")
             except Exception as e:
