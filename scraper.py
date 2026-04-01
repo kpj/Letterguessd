@@ -12,6 +12,12 @@ from google import genai
 from letterboxdpy.core.scraper import Scraper
 from letterboxdpy.movie import Movie
 from loguru import logger
+from pydantic import BaseModel, Field
+
+
+class ReviewSchema(BaseModel):
+    text: str = Field(description="The exact text of the review without modification.")
+    author: str = Field(description="The author of the review.")
 
 
 class ReviewCurator:
@@ -109,8 +115,6 @@ class ReviewCurator:
                 - Clues 5-7 (Medium): Focus on genre tropes, specific themes, or technical praise (music, editing).
                 - Clues 8-10 (Easy): Iconic quotes, mentions of the director's unique style, or notable actors (if you must).
 
-                Return a JSON array of exactly 10 objects: {{"text": "...", "author": "..."}}
-
                 Reviews to choose from:
                 {"\n\n".join(reviews_input)}
             """)
@@ -119,24 +123,18 @@ class ReviewCurator:
                 response = self.client.models.generate_content(
                     model="gemini-3-flash-preview",
                     contents=prompt,
-                    config={"response_mime_type": "application/json"},
+                    config={
+                        "response_mime_type": "application/json",
+                        "response_schema": list[ReviewSchema],
+                    },
                 )
 
-                # Check for empty response or safety filters
                 if not response.text:
                     raise ValueError(
                         "Empty response from LLM (possibly safety filter)."
                     )
 
-                raw_text = response.text
-                match = re.search(r"```(?:json)?\s*(.*?)\s*```", raw_text, re.DOTALL)
-                filtered = json.loads(match.group(1) if match else raw_text)
-
-                if isinstance(filtered, dict) and "reviews" in filtered:
-                    filtered = filtered["reviews"]
-
-                if not isinstance(filtered, list):
-                    raise ValueError(f"LLM returned non-list: {type(filtered)}")
+                filtered = json.loads(response.text)
 
                 # Post-LLM checks
                 valid, failed_texts = self._post_llm_checks(
@@ -190,23 +188,29 @@ class MovieProvider:
             try:
                 # The last element usually points to the highest page number
                 last_page_text = pagination_links[-1].get_text(strip=True)
-                max_page = int(last_page_text.replace(',', ''))
+                max_page = int(last_page_text.replace(",", ""))
             except ValueError:
                 pass
 
         start_page = random.randint(1, max_page)
-        
+
         pages_to_fetch = min(6, max_page - start_page + 1)
         if pages_to_fetch < 6 and max_page >= 6:
             start_page = max(1, max_page - 5)
             pages_to_fetch = 6
 
-        logger.info(f"Max page is {max_page}. Selected start_page {start_page}, will fetch {pages_to_fetch} page(s).")
+        logger.info(
+            f"Max page is {max_page}. Selected start_page {start_page}, will fetch {pages_to_fetch} page(s)."
+        )
 
         base_url_cleaned = base_url.rstrip("/")
         for i in range(pages_to_fetch):
             page_num = start_page + i
-            url = f"{base_url_cleaned}/page/{page_num}/" if page_num > 1 else f"{base_url_cleaned}/"
+            url = (
+                f"{base_url_cleaned}/page/{page_num}/"
+                if page_num > 1
+                else f"{base_url_cleaned}/"
+            )
 
             logger.info(f"Fetching slugs from {url}...")
             try:
@@ -307,7 +311,7 @@ class MovieProvider:
 
 class ScraperApp:
     """The main application that coordinates the scraping process."""
-    
+
     def __init__(self, count, no_llm=False, config_file="schedule.yml"):
         self.count = count
         self.provider = MovieProvider()
@@ -360,7 +364,9 @@ class ScraperApp:
                     break
 
                 if slug in self.history or slug in used_slugs_this_run:
-                    logger.debug(f"Skipping {slug} (already in history or used this run).")
+                    logger.debug(
+                        f"Skipping {slug} (already in history or used this run)."
+                    )
                     continue
 
                 data = self.provider.provide_movie_data(slug, self.curator)
@@ -368,7 +374,9 @@ class ScraperApp:
                     collected_for_day.append(data)
                     used_slugs_this_run.add(slug)
                     self.history.append(slug)
-                    logger.success(f"Added ({len(collected_for_day)}/{self.count}) for {day_name}.")
+                    logger.success(
+                        f"Added ({len(collected_for_day)}/{self.count}) for {day_name}."
+                    )
                 else:
                     time.sleep(2)
 
