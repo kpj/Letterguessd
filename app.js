@@ -123,10 +123,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetTitle = normalizeTitle(gameData.title);
         const guessedTitle = normalizeTitle(guess);
 
-        const correct = !isSkip && (
-            guessedTitle === targetTitle ||
-            (guessedTitle.length > 5 && targetTitle.includes(guessedTitle))
-        );
+        let correct = false;
+        if (!isSkip) {
+            // Prioritize absolute matches and valid substrings
+            if (guessedTitle === targetTitle || (guessedTitle.length > 5 && targetTitle.includes(guessedTitle))) {
+                correct = true;
+            } else if (typeof Fuse !== 'undefined') {
+                // Typo tolerance via Fuse.js
+                const fuse = new Fuse([targetTitle], {
+                    includeScore: true,
+                    threshold: 0.3, // 0.0 is perfect match, 1.0 is anything
+                    ignoreLocation: true
+                });
+                const result = fuse.search(guessedTitle);
+                if (result.length > 0) {
+                    correct = true;
+                }
+            }
+        }
 
         guessHistory.push({
             type: correct ? 'correct' : isSkip ? 'skip' : 'wrong',
