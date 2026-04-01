@@ -31,14 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameOver = false;
     let hasWon = false;
 
-    // Pick today's movie deterministically by day-of-year
-    function getDayIndex(numMovies) {
-        const now = new Date();
-        const start = new Date(now.getFullYear(), 0, 0);
-        const diff = now - start;
-        const oneDay = 1000 * 60 * 60 * 24;
-        const dayOfYear = Math.floor(diff / oneDay);
-        return dayOfYear % numMovies;
+    // Get the current day name
+    function getCurrentDayName() {
+        return new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     }
 
     // Load data
@@ -50,11 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(DATA_URL)
         .then(res => res.json())
         .then(data => {
-            if (!data.movies || data.movies.length === 0) {
+            if (!data.movies || Object.keys(data.movies).length === 0) {
                 throw new Error('No movies found in data.');
             }
-            const idx = getDayIndex(data.movies.length);
-            gameData = data.movies[idx];
+            const dayName = getCurrentDayName();
+            const gameDataList = data.movies[dayName];
+
+            // Determine the week number
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 0);
+            const diff = now - start;
+            const weekNum = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+            gameData = gameDataList[weekNum % gameDataList.length];
+
+            if (!gameData) {
+                throw new Error(`No movies found for this day: ${dayName}.`);
+            }
 
             // We expect 10 reviews from the scraper
             initGame();

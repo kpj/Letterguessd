@@ -7,6 +7,7 @@ import textwrap
 import time
 
 import dotenv
+import yaml
 from google import genai
 from letterboxdpy.core.scraper import Scraper
 from letterboxdpy.movie import Movie
@@ -170,36 +171,62 @@ class MovieProvider:
     """Handles low-level Letterboxd fetching and high-level movie data orchestration."""
 
     @staticmethod
-    def get_list_slugs(url):
-        """Fetch unique movie slugs from any Letterboxd list URL with pagination."""
-        slugs, current_url = set(), url
+    def get_list_slugs(base_url):
+        """Fetch unique movie slugs from a random page and up to 5 subsequent pages."""
+        slugs = set()
+        logger.info(f"Finding max pages for {base_url}...")
 
-        while current_url:
-            logger.info(f"Fetching slugs from {current_url}...")
+        try:
+            dom = Scraper.get_page(base_url)
+        except Exception as e:
+            logger.error(f"Failed to load base URL {base_url}: {e}")
+            return []
+
+        # Find max page
+        max_page = 1
+        pagination_links = dom.select(".paginate-pages a")
+        if pagination_links:
             try:
-                dom = Scraper.get_page(current_url)
-                poster_divs = dom.select("div[data-target-link]")
+                # The last element usually points to the highest page number
+                last_page_text = pagination_links[-1].get_text(strip=True)
+                max_page = int(last_page_text.replace(',', ''))
+            except ValueError:
+                pass
+
+        start_page = random.randint(1, max_page)
+        
+        pages_to_fetch = min(6, max_page - start_page + 1)
+        if pages_to_fetch < 6 and max_page >= 6:
+            start_page = max(1, max_page - 5)
+            pages_to_fetch = 6
+
+        logger.info(f"Max page is {max_page}. Selected start_page {start_page}, will fetch {pages_to_fetch} page(s).")
+
+        base_url_cleaned = base_url.rstrip("/")
+        for i in range(pages_to_fetch):
+            page_num = start_page + i
+            url = f"{base_url_cleaned}/page/{page_num}/" if page_num > 1 else f"{base_url_cleaned}/"
+
+            logger.info(f"Fetching slugs from {url}...")
+            try:
+                page_dom = Scraper.get_page(url)
+                poster_divs = page_dom.select("div[data-target-link]")
+                page_slugs = 0
                 for div in poster_divs:
                     target = div.get("data-target-link", "")
                     if "film/" in target:
                         slug = target.strip("/").split("/")[-1]
                         slugs.add(slug)
+                        page_slugs += 1
 
-                logger.info(f"Found {len(poster_divs)} movies on this page.")
-                next_link = dom.select_one(".pagination a.next")
-                current_url = (
-                    f"https://letterboxd.com{next_link.get('href')}"
-                    if next_link
-                    else None
-                )
-                if current_url:
-                    time.sleep(1)
+                logger.info(f"Found {page_slugs} movies on this page.")
+                if page_slugs == 0:
+                    break
+                time.sleep(1)
             except Exception as e:
-                logger.warning(f"Failed to fetch {current_url}: {e}")
+                logger.warning(f"Failed to fetch {url}: {e}")
                 break
 
-        if not slugs:
-            raise RuntimeError(f"No films found at {url}.")
         return list(slugs)
 
     @staticmethod
@@ -279,62 +306,102 @@ class MovieProvider:
 
 class ScraperApp:
     """The main application that coordinates the scraping process."""
-
-    def __init__(self, url, count, no_llm=False):
-        self.url = url
+    
+    def __init__(self, count, no_llm=False, config_file="schedule.yml"):
         self.count = count
-
         self.provider = MovieProvider()
         self.curator = (
             ReviewCurator(os.environ.get("GEMINI_API_KEY")) if not no_llm else None
         )
+        self.history_file = "history.json"
+        self.history = self._load_history()
+        self.days_mapping = self._load_config(config_file)
+
+    def _load_config(self, config_file):
+        try:
+            with open(config_file, "r") as f:
+                return yaml.safe_load(f) or {}
+        except Exception as e:
+            logger.error(f"Failed to load schedule from {config_file}: {e}")
+            return {}
+
+    def _load_history(self):
+        if os.path.exists(self.history_file):
+            try:
+                with open(self.history_file, "r") as f:
+                    return json.load(f)
+            except Exception as e:
+                logger.warning(f"Failed to load {self.history_file}: {e}")
+        return []
+
+    def _save_history(self):
+        # Keep last 100 history items to prevent endless growth
+        self.history = self.history[-100:]
+        try:
+            with open(self.history_file, "w") as f:
+                json.dump(self.history, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save {self.history_file}: {e}")
 
     def run(self):
         """Execute the full scraping run."""
-        slugs = self.provider.get_list_slugs(self.url)
-        random.shuffle(slugs)
+        movies_by_day = {}
+        used_slugs_this_run = set()
 
-        collected, used_slugs = [], set()
+        for day_name, list_url in self.days_mapping.items():
+            logger.info(f"=== Processing for {day_name.capitalize()} ===")
+            slugs = self.provider.get_list_slugs(list_url)
+            random.shuffle(slugs)
 
-        for slug in slugs:
-            if len(collected) >= self.count:
-                break
+            collected_for_day = []
+            for slug in slugs:
+                if len(collected_for_day) >= self.count:
+                    break
 
-            if slug in used_slugs:
-                continue
+                if slug in self.history or slug in used_slugs_this_run:
+                    logger.debug(f"Skipping {slug} (already in history or used this run).")
+                    continue
 
-            data = self.provider.provide_movie_data(slug, self.curator)
-            if data:
-                collected.append(data)
-                used_slugs.add(slug)
-                logger.success(f"Added ({len(collected)}/{self.count})")
+                data = self.provider.provide_movie_data(slug, self.curator)
+                if data:
+                    collected_for_day.append(data)
+                    used_slugs_this_run.add(slug)
+                    self.history.append(slug)
+                    logger.success(f"Added ({len(collected_for_day)}/{self.count}) for {day_name}.")
+                else:
+                    time.sleep(2)
+
+            if not collected_for_day:
+                logger.error(f"Failed to find any viable movie for {day_name}.")
             else:
-                time.sleep(2)
+                movies_by_day[day_name] = collected_for_day
 
-        if not collected:
+        if not movies_by_day:
             raise RuntimeError("No movies gathered.")
 
-        self._save_results(collected)
-        logger.success(f"Saved {len(collected)} movies to movie_data.json.")
+        self._save_results(movies_by_day)
+        self._save_history()
+        logger.success("Saved schedule to movie_data.json.")
 
     @staticmethod
-    def _save_results(collected):
+    def _save_results(movies_by_day):
         with open("movie_data.json", "w") as f:
-            json.dump({"movies": collected}, f, indent=2)
+            json.dump({"movies": movies_by_day}, f, indent=2)
 
 
 def main():
     parser = argparse.ArgumentParser(description="Letterboxd scraper.")
     parser.add_argument(
-        "--url",
-        default="https://letterboxd.com/films/",
-        help="Letterboxd URL to scrape (list or popular films)",
-    )
-    parser.add_argument(
         "--count",
         type=int,
-        default=7,
-        help="Number of movies to collect",
+        default=1,
+        help="Number of movies to collect per day",
+    )
+    parser.add_argument(
+        "--config",
+        type=str,
+        default="schedule.yml",
+        help="Path to the schedule YAML file",
     )
     parser.add_argument(
         "--no-llm",
@@ -345,7 +412,7 @@ def main():
 
     dotenv.load_dotenv()
 
-    app = ScraperApp(args.url, args.count, args.no_llm)
+    app = ScraperApp(args.count, args.no_llm, args.config)
     app.run()
 
 

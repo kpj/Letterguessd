@@ -23,6 +23,10 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      - name: Fetch recent history
+        run: |
+          wget -q https://raw.githubusercontent.com/kpj/Letterguessd/data/history.json || echo '[]' > history.json
+
       - name: Run scraper
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -33,6 +37,6 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -B data
-          git add movie_data.json
+          git add movie_data.json history.json
           git commit -m "Automated movie data update"
           git push origin data --force
