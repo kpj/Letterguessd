@@ -21,68 +21,110 @@ class ReviewCurator:
         self.client = genai.Client(api_key=api_key)
 
     @staticmethod
-    def _post_llm_checks(reviews, title, original_texts):
-        """Filter out reviews that fail sanity checks after LLM selection."""
-        title_lower = title.lower()
-        title_no_year = re.sub(r'\s*\(\d{4}\)\s*$', '', title_lower).strip()
+    def _is_valid_review(text, author, title, original_texts=None):
+        """Pure validation for a single review. original_texts is for POST-LLM checks."""
+        if not text or not isinstance(text, str):
+            return False
+        if not author or not isinstance(author, str):
+            return False
 
+        t_lower = title.lower()
+        t_no_year = re.sub(r"\s*\(\d{4}\)\s*$", "", t_lower).strip()
+        review_lower = text.lower()
+
+        # Reject if title is mentioned
+        if t_lower in review_lower or t_no_year in review_lower:
+            return False
+
+        # If original_texts provided, reject if LLM modified the text
+        if original_texts is not None and text not in original_texts:
+            return False
+
+        return True
+
+    def _pre_filter_reviews(self, reviews_data, title):
+        """Strip out obviously bad reviews before LLM call to save tokens."""
         valid = []
-        for r in reviews:
-            # Must have non-empty text and author
-            if not isinstance(r.get("text"), str) or not r["text"].strip():
-                continue
-            if not isinstance(r.get("author"), str) or not r["author"].strip():
-                continue
-            # Must not contain the movie title (with or without year)
-            text_lower = r["text"].lower()
-            if title_lower in text_lower or title_no_year in text_lower:
-                continue
-            # Text must not have been modified by the LLM
-            if r["text"] not in original_texts:
-                continue
-            valid.append(r)
+        for text, author in reviews_data:
+            if self._is_valid_review(text, author, title):
+                valid.append((text, author))
         return valid
+
+    def _post_llm_checks(self, filtered, title, original_texts):
+        """Run post-LLM validation checks on a batch of reviews."""
+        valid = []
+        failed_texts = set()
+        for r in filtered:
+            text, author = r.get("text"), r.get("author")
+            if self._is_valid_review(text, author, title, original_texts):
+                valid.append({"text": text, "author": author})
+            else:
+                if text:
+                    failed_texts.add(text)
+        return valid, failed_texts
 
     def curate_reviews(self, title, year, reviews_data):
         """Use Gemini AI to select the best 10 puzzle clues from the review pool."""
-        print(f"Using LLM to filter reviews for '{title}'...")
+        # Pre-filter to save tokens
+        working_pool = self._pre_filter_reviews(reviews_data, title)
+        print(
+            f"  Pre-filtered pool: {len(working_pool)} reviews (was {len(reviews_data)})"
+        )
 
-        original_texts = {text for text, _ in reviews_data}
-        reviews_input = [
-            f"[{i}] Author: {a}\nReview: {t}" for i, (t, a) in enumerate(reviews_data)
-        ]
+        if len(working_pool) < 10:
+            print(
+                f"  Skipping {title}: insufficient valid reviews after pre-filtering."
+            )
+            return None
 
-        prompt = textwrap.dedent(f"""\
-            I am building a trivia game where users guess a movie based on its Letterboxd reviews.
-            Movie: {title} ({year})
-
-            Select exactly 10 reviews from the list below to serve as puzzle clues.
-
-            CRITICAL CONSTRAINTS:
-            - NO MOVIE TITLE: Skip any review that mentions the title (partial or full).
-            - NO SPOILERS: Skip any review that reveals major plot twists.
-            - NO MODIFICATION: Do NOT change the text at all. Keep emojis, punctuation, and style exactly as provided.
-            - CHARACTER NAMES: Avoid character names in the first 7 clues. They are okay in clues 8-10.
-            - ACTORS/DIRECTORS: Only allowed in clues 8, 9, and 10 (Easiest clues).
-
-            RANKING (1 = Hardest, 10 = Easiest):
-            - Clues 1-4 (Hard): Focus on "vibes," cinematography style, abstract feelings, or funny observational humor that doesn't name specifics.
-            - Clues 5-7 (Medium): Focus on genre tropes, specific themes, or technical praise (music, editing).
-            - Clues 8-10 (Easy): Iconic quotes, mentions of the director's unique style, or notable actors (if you must).
-
-            Return a JSON array of exactly 10 objects: {{"text": "...", "author": "..."}}
-
-            Reviews to choose from:
-            {"\n\n".join(reviews_input)}
-        """)
+        # Limit to top ~50 reviews to stay token-efficient but catch good reviews
+        working_pool = working_pool[:50]
+        original_texts = {text for text, _ in working_pool}
 
         for attempt in range(3):
+            # Format input for LLM
+            reviews_input = [
+                f"[{i}] Author: {a}\nReview: {t}"
+                for i, (t, a) in enumerate(working_pool)
+            ]
+
+            prompt = textwrap.dedent(f"""\
+                I am building a trivia game where users guess a movie based on its Letterboxd reviews.
+                Movie: {title} ({year})
+
+                Select exactly 10 reviews from the list below to serve as puzzle clues.
+
+                CRITICAL CONSTRAINTS:
+                - NO MOVIE TITLE: Skip any review that mentions the title (partial or full).
+                - NO SPOILERS: Skip any review that reveals major plot twists.
+                - NO MODIFICATION: Do NOT change the text at all. Keep emojis, punctuation, and style exactly as provided.
+                - CHARACTER NAMES: Avoid character names in the first 7 clues. They are okay in clues 8-10.
+                - ACTORS/DIRECTORS: Only allowed in clues 8, 9, and 10 (Easiest clues).
+
+                RANKING (1 = Hardest, 10 = Easiest):
+                - Clues 1-4 (Hard): Focus on "vibes," cinematography style, abstract feelings, or funny observational humor that doesn't name specifics.
+                - Clues 5-7 (Medium): Focus on genre tropes, specific themes, or technical praise (music, editing).
+                - Clues 8-10 (Easy): Iconic quotes, mentions of the director's unique style, or notable actors (if you must).
+
+                Return a JSON array of exactly 10 objects: {{"text": "...", "author": "..."}}
+
+                Reviews to choose from:
+                {"\n\n".join(reviews_input)}
+            """)
+
             try:
                 response = self.client.models.generate_content(
                     model="gemini-3-flash-preview",
                     contents=prompt,
                     config={"response_mime_type": "application/json"},
                 )
+
+                # Check for empty response or safety filters
+                if not response.text:
+                    raise ValueError(
+                        "Empty response from LLM (possibly safety filter)."
+                    )
+
                 raw_text = response.text
                 match = re.search(r"```(?:json)?\s*(.*?)\s*```", raw_text, re.DOTALL)
                 filtered = json.loads(match.group(1) if match else raw_text)
@@ -90,15 +132,36 @@ class ReviewCurator:
                 if isinstance(filtered, dict) and "reviews" in filtered:
                     filtered = filtered["reviews"]
 
-                if isinstance(filtered, list) and len(filtered) >= 10:
-                    filtered = self._post_llm_checks(filtered, title, original_texts)
-                    if len(filtered) >= 10:
-                        return filtered[:10]
+                if not isinstance(filtered, list):
+                    raise ValueError(f"LLM returned non-list: {type(filtered)}")
 
-                raise ValueError(f"Invalid LLM response format or count: {response}")
+                # Post-LLM checks
+                valid, failed_texts = self._post_llm_checks(
+                    filtered, title, original_texts
+                )
+
+                if len(valid) >= 10:
+                    return valid[:10]
+
+                # If count < 10, remove the failed ones from our pool and retry
+                if failed_texts:
+                    print(
+                        f"  Attempt {attempt + 1} rejected {len(failed_texts)} reviews. Retrying..."
+                    )
+                    working_pool = [r for r in working_pool if r[0] not in failed_texts]
+                else:
+                    print(
+                        f"  Attempt {attempt + 1} only returned {len(valid)} reviews (expected 10). Retrying..."
+                    )
+
+                if len(working_pool) < 10:
+                    print("  Working pool exhausted below 10 reviews.")
+                    break
+
             except Exception as e:
-                print(f"LLM attempt {attempt + 1} failed: {e}")
+                print(f"  LLM attempt {attempt + 1} failed: {e}")
                 time.sleep(2)
+
         return None
 
 
