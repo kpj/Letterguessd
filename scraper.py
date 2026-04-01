@@ -97,6 +97,7 @@ class ReviewCurator:
                 Select exactly 10 reviews from the list below to serve as puzzle clues.
 
                 CRITICAL CONSTRAINTS:
+                - ENGLISH ONLY: Only select reviews that are written in English.
                 - NO MOVIE TITLE: Skip any review that mentions the title (partial or full).
                 - NO SPOILERS: Skip any review that reveals major plot twists.
                 - NO MODIFICATION: Do NOT change the text at all. Keep emojis, punctuation, and style exactly as provided.
