@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shareToast = document.getElementById('share-toast');
     const sharePreview = document.getElementById('share-preview');
     const endStats = document.getElementById('end-stats');
+    const timerCountdownEl = document.getElementById('timer-countdown');
 
     // Help Modal elements
     const helpButton = document.getElementById('help-button');
@@ -70,6 +71,34 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackMessage.textContent = 'Error loading game data. Please try again later.';
             feedbackMessage.className = 'feedback-error';
         });
+
+    function startTimer() {
+        function updateTimer() {
+            const now = new Date();
+            // Next midnight in local time
+            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const diff = tomorrow - now;
+
+            if (diff <= 0) {
+                timerCountdownEl.textContent = '00:00:00';
+                return;
+            }
+
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            const display = [h, m, s].map(v => v.toString().padStart(2, '0')).join(':');
+            if (timerCountdownEl) {
+                timerCountdownEl.textContent = display;
+            }
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+    }
+
+    startTimer();
 
     function initGame() {
         updateGuessesDisplay();
