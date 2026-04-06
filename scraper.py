@@ -103,6 +103,7 @@ class ReviewCurator:
                 Select exactly 10 reviews from the list below to serve as puzzle clues.
 
                 CRITICAL CONSTRAINTS:
+                - NO GENERIC PRAISE: Absolutely skip one-liners like "Masterpiece", "10/10", "World-class filmmaking", "Cinematic excellence", or "Great movie". These are useless for trivia.
                 - ENGLISH ONLY: Only select reviews that are written in English.
                 - NO MOVIE TITLE: Skip any review that mentions the title (partial or full).
                 - NO SPOILERS: Skip any review that reveals major plot twists.
@@ -111,9 +112,9 @@ class ReviewCurator:
                 - ACTORS/DIRECTORS: Only allowed in clues 8, 9, and 10 (Easiest clues).
 
                 RANKING (1 = Hardest, 10 = Easiest):
-                - Clues 1-4 (Hard): Focus on "vibes," cinematography style, abstract feelings, or funny observational humor that doesn't name specifics.
-                - Clues 5-7 (Medium): Focus on genre tropes, specific themes, or technical praise (music, editing).
-                - Clues 8-10 (Easy): Iconic quotes, mentions of the director's unique style, or notable actors (if you must).
+                - Clues 1-4 (Hard): Focus on unique visual motifs, atmospheric descriptions, or clever "Letterboxd-style" observational humor that doesn't name specifics. Use clues that capture the "flavor" of the film.
+                - Clues 5-7 (Medium): Focus on specific plot premises (without naming roles), genre tropes, or technical praise that relates to the movie's unique identity.
+                - Clues 8-10 (Easy): Iconic/famous quotes, mentions of the director's specific style, or notable actors.
 
                 Reviews to choose from:
                 {"\n\n".join(reviews_input)}
