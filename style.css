@@ -225,6 +225,74 @@ header p {
     content: '—';
 }
 
+.hints-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.hint-btn {
+    background: var(--panel-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.hint-btn:hover {
+    color: var(--text-highlight);
+    border-color: var(--text-primary);
+}
+
+.hint-display {
+    width: 100%;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, rgba(64, 188, 244, 0.05), rgba(0, 224, 84, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-around;
+    gap: 1.5rem;
+    text-align: center;
+    animation: revealPulse 0.4s ease-out;
+}
+
+.hint-item {
+    flex: 1;
+}
+
+@keyframes revealPulse {
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.hint-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    opacity: 0.7;
+}
+
+.hint-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--lb-blue);
+}
+
 .guess-area {
     position: sticky;
     bottom: 0;
@@ -234,7 +302,23 @@ header p {
 
 #guess-form {
     display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.button-row {
+    display: flex;
     gap: 0.5rem;
+}
+
+.button-row button {
+    flex: 1;
+    white-space: nowrap;
+    padding: 0.8rem 1rem;
+}
+
+#guess-button {
+    flex: 4;
 }
 
 input[type="text"] {

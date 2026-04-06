@@ -22,6 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const helpModal = document.getElementById('help-modal');
     const closeHelpBtn = document.getElementById('close-help-btn');
     const closeModalX = document.querySelector('.close-modal');
+    const hintsContainer = document.getElementById('hints-container');
+    const hintButton = document.getElementById('hint-button');
+    const hintDisplay = document.getElementById('hint-display');
 
     const MAX_GUESSES = 10;
 
@@ -31,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let guessHistory = [];     // 'correct', 'wrong', 'skip'
     let isGameOver = false;
     let hasWon = false;
+    let hintRevealed = false;
 
     // Get the current day name
     function getCurrentDayName() {
@@ -210,6 +214,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentReviewIndex < gameData.reviews.length) {
             revealNextReview();
         }
+
+        // Show hints after the first interaction
+        if (hintsContainer) hintsContainer.classList.remove('hidden');
+    }
+
+    function handleHint() {
+        if (isGameOver || hintRevealed || guessesMade >= MAX_GUESSES - 1) return;
+
+        guessesMade++;
+        hintRevealed = true;
+        updateGuessesDisplay();
+
+        guessHistory.push({
+            type: 'hint',
+            title: 'Extra Hint'
+        });
+
+        const genres = gameData.genres.slice(0, 3).join(', ') || 'N/A';
+        const year = gameData.year || 'N/A';
+
+        hintDisplay.innerHTML = `
+            <div class="hint-item">
+                <span class="hint-label">Release Year</span>
+                <span class="hint-value">${year}</span>
+            </div>
+            <div class="hint-item">
+                <span class="hint-label">Genres</span>
+                <span class="hint-value">${genres}</span>
+            </div>
+        `;
+        hintDisplay.classList.remove('hidden');
+        if (hintsContainer) hintsContainer.classList.remove('hidden');
+        hintButton.classList.add('hidden'); // Only one hint allowed
+
+        // If we ran out of guesses via hint
+        if (guessesMade >= MAX_GUESSES) {
+            endGame(false);
+        }
+
+        // Feedback
+        feedbackMessage.textContent = 'Hint revealed! (1 guess spent)';
+        feedbackMessage.className = 'feedback-error';
+        setTimeout(() => feedbackMessage.classList.add('hidden'), 2000);
     }
 
     function updateGuessesDisplay() {
@@ -252,6 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const h = guessHistory[i];
             if (h) {
                 if (h.type === 'correct') squares.push('🟩');
+                else if (h.type === 'hint') squares.push('🔍');
                 else if (h.type === 'wrong' || h.type === 'skip') squares.push('🟥');
             } else {
                 squares.push('⬜');
@@ -273,6 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
     skipButton.addEventListener('click', e => {
         e.preventDefault();
         handleGuess(true);
+    });
+
+    hintButton.addEventListener('click', e => {
+        e.preventDefault();
+        handleHint();
     });
 
     shareButton.addEventListener('click', () => {

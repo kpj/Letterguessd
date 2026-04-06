@@ -34,12 +34,18 @@
             <div id="reviews-container">
                 <!-- Reviews injected by JS -->
             </div>
+            <div id="hints-container" class="hints-container hidden">
+                <div id="hint-display" class="hint-display hidden"></div>
+            </div>
 
             <div id="guess-area" class="guess-area">
                 <form id="guess-form">
                     <input type="text" id="guess-input" placeholder="Guess a movie..." autocomplete="off">
-                    <button type="submit" id="guess-button">Guess</button>
-                    <button type="button" id="skip-button" class="secondary-btn">Next</button>
+                    <div class="button-row">
+                        <button type="submit" id="guess-button">Guess</button>
+                        <button type="button" id="skip-button" class="secondary-btn">Next review</button>
+                        <button id="hint-button" type="button" class="hint-btn">Extra hint</button>
+                    </div>
                 </form>
                 <div id="feedback-message" class="hidden"></div>
             </div>
@@ -70,8 +76,11 @@
             <div class="help-steps">
                 <p>1. You are shown a <strong>review</strong> from Letterboxd for a randomly selected movie.</p>
                 <p>2. Try to <strong>guess the title</strong> in the input box.</p>
-                <p>3. Each <strong>wrong guess</strong> or <strong>next review</strong> reveals another hint.</p>
-                <p>4. You have <strong>10 attempts</strong> to correctly identify the movie!</p>
+                <p>3. Use <strong>Next review</strong> to reveal another review at the cost of <strong>1 guess</strong>.
+                </p>
+                <p>4. Use <strong>Extra hint</strong> to reveal the year and genre at the cost of <strong>1
+                        guess</strong>.</p>
+                <p>5. You have <strong>10 attempts</strong> to correctly identify the movie!</p>
             </div>
             <button id="close-help-btn">Got it!</button>
         </div>

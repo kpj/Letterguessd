@@ -298,9 +298,26 @@ class MovieProvider:
             if not final_reviews:
                 return None
 
+            genres = (
+                [g["name"] for g in m.genres]
+                if hasattr(m, "genres") and m.genres
+                else []
+            )
+            directors = (
+                [d["name"] for d in m.crew.get("director", [])]
+                if hasattr(m, "crew") and m.crew
+                else []
+            )
+            cast = (
+                [c["name"] for c in m.cast[:5]] if hasattr(m, "cast") and m.cast else []
+            )
+
             return {
                 "title": title,
                 "year": year,
+                "genres": genres,
+                "directors": directors,
+                "cast": cast,
                 "link": f"https://letterboxd.com/film/{slug}/",
                 "poster": m.poster or "",
                 "reviews": final_reviews,
