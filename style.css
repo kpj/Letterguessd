@@ -91,14 +91,18 @@ header p {
 }
 
 .stats-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-color);
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    margin-bottom: 0.5rem;
+    padding: 1rem 0 0.5rem 0;
+    margin-bottom: 1rem;
     font-weight: 600;
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
 }
 
 #help-button {
