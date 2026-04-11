@@ -25,11 +25,14 @@
             <div class="stats-bar">
                 <span id="guesses-remaining">Guesses left: <span class="highlight">10</span></span>
                 <div class="timer-container">
+                    <span id="game-id-badge" class="timer-label"></span>
+                    <span class="timer-sep">|</span>
                     <span class="timer-label">Next movie in:</span>
-                    <span id="timer-countdown" class="highlight">--:--:--</span>
+                    <span id="timer-countdown" class="timer-label">--:--:--</span>
                 </div>
                 <button id="help-button" class="help-btn" title="How to play">?</button>
             </div>
+            <div id="replay-notice" class="replay-notice hidden"></div>
 
             <div id="reviews-container">
                 <!-- Reviews injected by JS -->

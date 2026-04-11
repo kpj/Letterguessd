@@ -5,6 +5,7 @@ import random
 import re
 import textwrap
 import time
+from datetime import date, timedelta
 
 import dotenv
 import yaml
@@ -327,6 +328,10 @@ class MovieProvider:
             return None
 
 
+# Day 1 = April 11, 2026 (first new-format scraper run).
+_EPOCH = date(2026, 4, 10)
+
+
 class ScraperApp:
     """The main application that coordinates the scraping process."""
 
@@ -355,33 +360,59 @@ class ScraperApp:
                     return json.load(f)
             except Exception as e:
                 logger.warning(f"Failed to load {self.history_file}: {e}")
-        return []
+        return {"games": []}
 
     def _save_history(self):
-        # Keep last 100 history items to prevent endless growth
-        self.history = self.history[-100:]
         try:
             with open(self.history_file, "w") as f:
                 json.dump(self.history, f, indent=2)
         except Exception as e:
             logger.error(f"Failed to save {self.history_file}: {e}")
 
+    @staticmethod
+    def _display_date_for_day(day_name: str) -> date:
+        """Return the nearest upcoming date (today or future) matching the given weekday name."""
+        today = date.today()
+        day_names = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+        ]
+        target_weekday = day_names.index(day_name.lower())
+        days_ahead = (target_weekday - today.weekday()) % 7
+        return today + timedelta(days=days_ahead)
+
+    @staticmethod
+    def _game_id_for_date(d: date) -> int:
+        """Compute the 1-indexed game ID for a given display date."""
+        return (d - _EPOCH).days
+
     def run(self):
         """Execute the full scraping run."""
         movies_by_day = {}
         used_slugs_this_run = set()
+
+        # Derive used slugs from existing history (no separate field needed)
+        used_slugs_history = {g["slug"] for g in self.history.get("games", [])}
 
         for day_name, list_url in self.days_mapping.items():
             logger.info(f"=== Processing for {day_name.capitalize()} ===")
             slugs = self.provider.get_list_slugs(list_url)
             random.shuffle(slugs)
 
+            display_date = self._display_date_for_day(day_name)
+            game_id = self._game_id_for_date(display_date)
+
             collected_for_day = []
             for slug in slugs:
                 if len(collected_for_day) >= self.count:
                     break
 
-                if slug in self.history or slug in used_slugs_this_run:
+                if slug in used_slugs_history or slug in used_slugs_this_run:
                     logger.debug(
                         f"Skipping {slug} (already in history or used this run)."
                     )
@@ -391,9 +422,20 @@ class ScraperApp:
                 if data:
                     collected_for_day.append(data)
                     used_slugs_this_run.add(slug)
-                    self.history.append(slug)
+
+                    # Archive full game record for future replay
+                    self.history.setdefault("games", []).append(
+                        {
+                            "id": game_id,
+                            "date": display_date.isoformat(),
+                            "day": day_name.lower(),
+                            "slug": slug,
+                            **data,
+                        }
+                    )
+
                     logger.success(
-                        f"Added ({len(collected_for_day)}/{self.count}) for {day_name}."
+                        f"Added ({len(collected_for_day)}/{self.count}) for {day_name} [game #{game_id}, {display_date}]."
                     )
                 else:
                     time.sleep(2)

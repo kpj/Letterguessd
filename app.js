@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sharePreview = document.getElementById('share-preview');
     const endStats = document.getElementById('end-stats');
     const timerCountdownEl = document.getElementById('timer-countdown');
+    const gameIdBadge = document.getElementById('game-id-badge');
+    const replayNotice = document.getElementById('replay-notice');
 
     // Help Modal elements
     const helpButton = document.getElementById('help-button');
@@ -28,6 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const MAX_GUESSES = 10;
 
+    // Game ID system — epoch = 2026-04-10, so ID 1 = April 11 2026
+    const EPOCH = new Date(Date.UTC(2026, 3, 10)); // month is 0-indexed
+    function getGameId(forDate) {
+        const d = Date.UTC(forDate.getFullYear(), forDate.getMonth(), forDate.getDate());
+        return Math.floor((d - EPOCH) / 86400000);
+    }
+
     let gameData = null;       // the selected movie object
     let currentReviewIndex = 0;
     let guessesMade = 0;
@@ -35,46 +44,106 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameOver = false;
     let hasWon = false;
     let hintRevealed = false;
+    let activeGameId = null;   // the game ID currently being played
 
     // Get the current day name
     function getCurrentDayName() {
         return new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
     }
 
-    // Load data
+    // Data URLs
     const isLocal = ['localhost', '127.0.0.1', '[::]', ''].includes(window.location.hostname);
     const DATA_URL = isLocal
         ? 'movie_data.json'
         : 'https://raw.githubusercontent.com/kpj/Letterguessd/data/movie_data.json';
+    const HISTORY_URL = isLocal
+        ? 'history.json'
+        : 'https://raw.githubusercontent.com/kpj/Letterguessd/data/history.json';
 
-    fetch(DATA_URL)
-        .then(res => res.json())
-        .then(data => {
-            if (!data.movies || Object.keys(data.movies).length === 0) {
-                throw new Error('No movies found in data.');
-            }
-            const dayName = getCurrentDayName();
-            const gameDataList = data.movies[dayName];
+    // Parse requested game ID from URL (?id=N), falling back to today
+    const todayId = getGameId(new Date());
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedId = urlParams.has('id') ? parseInt(urlParams.get('id'), 10) : todayId;
+    const isToday = requestedId === todayId;
 
-            // Determine the week number
-            const now = new Date();
-            const start = new Date(now.getFullYear(), 0, 0);
-            const diff = now - start;
-            const weekNum = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
-            gameData = gameDataList[weekNum % gameDataList.length];
+    function setGameIdBadge(id) {
+        if (gameIdBadge) gameIdBadge.textContent = `Game #${id}`;
+    }
 
-            if (!gameData) {
-                throw new Error(`No movies found for this day: ${dayName}.`);
-            }
+    function setReplayNotice(gameEntry) {
+        if (!replayNotice) return;
+        const d = new Date(gameEntry.date + 'T00:00:00Z');
+        const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+        replayNotice.innerHTML = `
+            <span>Replaying game from ${label}</span>
+            <a href="${window.location.pathname}" class="today-link">Play Today</a>
+        `;
+        replayNotice.classList.remove('hidden');
+    }
 
-            // We expect 10 reviews from the scraper
-            initGame();
-        })
-        .catch(err => {
-            console.error('Failed to load movie data:', err);
-            feedbackMessage.textContent = 'Error loading game data. Please try again later.';
-            feedbackMessage.className = 'feedback-error';
-        });
+    function initFromData(entry) {
+        gameData = entry;
+        activeGameId = entry.id ?? requestedId;
+        setGameIdBadge(activeGameId);
+        initGame();
+    }
+
+    function showLoadError(msg) {
+        feedbackMessage.textContent = msg;
+        feedbackMessage.className = 'feedback-error';
+        feedbackMessage.classList.remove('hidden');
+    }
+
+    // Two-phase data lookup:
+    // 1. Today's game → fast path via movie_data.json
+    // 2. Past game    → look up in history.json by ID
+    if (isToday) {
+        fetch(DATA_URL)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.movies || Object.keys(data.movies).length === 0) {
+                    throw new Error('No movies found in data.');
+                }
+                const dayName = getCurrentDayName();
+                const gameDataList = data.movies[dayName];
+
+                // Determine the week number
+                const now = new Date();
+                const start = new Date(now.getFullYear(), 0, 0);
+                const diff = now - start;
+                const weekNum = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+                const entry = gameDataList[weekNum % gameDataList.length];
+
+                if (!entry) {
+                    throw new Error(`No movies found for today (${dayName}).`);
+                }
+                // Inject the ID so downstream code can reference it
+                entry.id = todayId;
+                initFromData(entry);
+            })
+            .catch(err => {
+                console.error('Failed to load movie data:', err);
+                showLoadError('Error loading game data. Please try again later.');
+            });
+    } else {
+        // Past game — look up by ID in history.json
+        setGameIdBadge(requestedId);
+        fetch(HISTORY_URL)
+            .then(res => res.json())
+            .then(data => {
+                const games = data.games || [];
+                const entry = games.find(g => g.id === requestedId);
+                if (!entry) {
+                    throw new Error(`Game #${requestedId} not found.`);
+                }
+                setReplayNotice(entry);
+                initFromData(entry);
+            })
+            .catch(err => {
+                console.error('Failed to load history:', err);
+                showLoadError(`Game #${requestedId} not found. Past games are added to the archive after they have been played.`);
+            });
+    }
 
     function startTimer() {
         function updateTimer() {
@@ -310,7 +379,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateShareText() {
         const score = hasWon ? guessesMade : 'X';
-        return `Letterguessd ${score}/${MAX_GUESSES}\n${buildSquares()}\n${window.location.href}`;
+        const id = activeGameId ?? requestedId;
+        const base = window.location.origin + window.location.pathname;
+        const shareUrl = `${base}?id=${id}`;
+        return `Letterguessd #${id}: ${score}/${MAX_GUESSES}\n${buildSquares()}\n${shareUrl}`;
     }
 
     guessForm.addEventListener('submit', e => {

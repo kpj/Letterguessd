@@ -25,7 +25,7 @@ jobs:
 
       - name: Fetch recent history
         run: |
-          wget -q https://raw.githubusercontent.com/kpj/Letterguessd/data/history.json || echo '[]' > history.json
+          wget -q https://raw.githubusercontent.com/kpj/Letterguessd/data/history.json || echo '{"games":[]}' > history.json
 
       - name: Run scraper
         env:
