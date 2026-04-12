@@ -80,6 +80,7 @@ def test_full_scrape_integration(mocker, tmp_path):
 
     app = ScraperApp(count=1, no_llm=False)
     app.history_file = test_history
+    app.output_file = str(tmp_path / "test_movie_data.json")
     app.days_mapping = {"monday": "http://fake.url/list"}
 
     # Run loop (Mocking today to be Sunday April 12)

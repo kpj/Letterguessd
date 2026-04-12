@@ -342,6 +342,7 @@ class ScraperApp:
             ReviewCurator(os.environ.get("GEMINI_API_KEY")) if not no_llm else None
         )
         self.history_file = "history.json"
+        self.output_file = "movie_data.json"
         self.history = self._load_history()
         self.days_mapping = self._load_config(config_file)
 
@@ -450,11 +451,10 @@ class ScraperApp:
 
         self._save_results(movies_by_day)
         self._save_history()
-        logger.success("Saved schedule to movie_data.json.")
+        logger.success(f"Saved schedule to {self.output_file}.")
 
-    @staticmethod
-    def _save_results(movies_by_day):
-        with open("movie_data.json", "w") as f:
+    def _save_results(self, movies_by_day):
+        with open(self.output_file, "w") as f:
             json.dump({"movies": movies_by_day}, f, indent=2)
 
 
