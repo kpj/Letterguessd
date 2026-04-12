@@ -58,6 +58,24 @@ def dev_server(tmp_path_factory):
     with open(tmp_dir / "movie_data.json", "w") as f:
         json.dump(dummy_data, f)
 
+    # Setup: Create a dummy history.json with an archived game
+    history_game = {
+        "id": 0,
+        "date": "2026-04-10",
+        "title": "Interstellar",
+        "year": "2014",
+        "genres": ["Adventure", "Sci-Fi"],
+        "directors": ["Christopher Nolan"],
+        "cast": ["Matthew McConaughey"],
+        "poster": "",
+        "reviews": [{"text": "Stay.", "author": "Murph"}],
+    }
+
+    history_data = {"games": [history_game]}
+
+    with open(tmp_dir / "history.json", "w") as f:
+        json.dump(history_data, f)
+
     # Configure the handler to serve from the temp directory
     handler = functools.partial(SimpleHTTPRequestHandler, directory=str(tmp_dir))
 
@@ -104,6 +122,21 @@ def test_multi_day_selection(page: Page, dev_server):
     expect(page.locator(".review-text").first).to_have_text("There is no spoon.")
     # Badge should show tomorrow's ID
     expect(page.locator("#game-id-badge")).to_have_text(f"Game #{tomorrow_id}")
+
+
+def test_history_load(page: Page, dev_server):
+    # Test loading Game #0 from history.json
+    page.goto(f"{dev_server}/?id=0")
+
+    # Should load Interstellar
+    expect(page.locator(".review-text").first).to_have_text("Stay.")
+    # Should show the replay notice
+    expect(page.locator("#replay-notice")).to_be_visible()
+    expect(page.locator("#replay-notice")).to_contain_text(
+        "Replaying game from Apr 10, 2026"
+    )
+    # Badge should show Game #0
+    expect(page.locator("#game-id-badge")).to_have_text("Game #0")
 
 
 def test_guess_interaction(page: Page, dev_server):
