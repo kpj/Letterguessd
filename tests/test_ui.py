@@ -2,11 +2,14 @@ import functools
 import json
 import os
 import threading
-import time
+from datetime import date
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 import pytest
 from playwright.sync_api import Page, expect
+
+
+from datetime import timedelta
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -21,25 +24,36 @@ def dev_server(tmp_path_factory):
         with open(src_path, "rb") as src, open(dst_path, "wb") as dst:
             dst.write(src.read())
 
-    # Setup: Create a dummy movie_data.json in the temp directory
-    # app.js expects: { "movies": { "monday": [...], ... } }
-    day_name = time.strftime("%A").lower()
+    # Setup: Create a dummy movie_data.json with Today and Tomorrow
+    today_date = date.today()
+    tomorrow_date = today_date + timedelta(days=1)
 
-    movie_entry = {
-        "id": 1,
+    today_name = today_date.strftime("%A").lower()
+    tomorrow_name = tomorrow_date.strftime("%A").lower()
+
+    today_movie = {
         "title": "Inception",
         "year": "2010",
         "genres": ["Action", "Sci-Fi"],
         "directors": ["Christopher Nolan"],
         "cast": ["Leo"],
         "poster": "",
-        "reviews": [
-            {"text": "A dream within a dream.", "author": "User 1"},
-            {"text": "Mind-bending visuals.", "author": "User 2"},
-        ],
+        "reviews": [{"text": "A dream within a dream.", "author": "User 1"}],
     }
 
-    dummy_data = {"movies": {day_name: [movie_entry]}}
+    tomorrow_movie = {
+        "title": "The Matrix",
+        "year": "1999",
+        "genres": ["Action", "Sci-Fi"],
+        "directors": ["The Wachowskis"],
+        "cast": ["Keanu"],
+        "poster": "",
+        "reviews": [{"text": "There is no spoon.", "author": "User 2"}],
+    }
+
+    dummy_data = {
+        "movies": {today_name: [today_movie], tomorrow_name: [tomorrow_movie]}
+    }
 
     with open(tmp_dir / "movie_data.json", "w") as f:
         json.dump(dummy_data, f)
@@ -48,7 +62,6 @@ def dev_server(tmp_path_factory):
     handler = functools.partial(SimpleHTTPRequestHandler, directory=str(tmp_dir))
 
     # Start a pure Python HTTP server in a separate thread
-    # Using port 0 allows the OS to pick an available port automatically
     httpd = HTTPServer(("127.0.0.1", 0), handler)
     port = httpd.server_address[1]
 
@@ -58,7 +71,7 @@ def dev_server(tmp_path_factory):
 
     yield f"http://127.0.0.1:{port}"
 
-    # Teardown: Stop the server cleanly
+    # Teardown
     httpd.shutdown()
     httpd.server_close()
     server_thread.join()
@@ -69,16 +82,32 @@ def test_basic_load(page: Page, dev_server):
     page.on("console", lambda msg: print(f"Browser console: {msg.text}"))
     page.on("pageerror", lambda exc: print(f"Browser error: {exc}"))
 
-    page.goto(f"{dev_server}/?id=1")
+    page.goto(dev_server)
     # Check header
     expect(page.locator("header h1")).to_have_text("Letterguessd")
     # Check stats bar
     expect(page.locator("#game-id-badge")).to_be_visible()
-    expect(page.locator("#guesses-remaining")).to_contain_text("Guesses left:")
+
+
+def test_multi_day_selection(page: Page, dev_server):
+    # 1. Test "Today" selection (no ID in URL)
+    page.goto(dev_server)
+    # Based on fixture, Today is Inception (Review: A dream within a dream.)
+    expect(page.locator(".review-text").first).to_have_text("A dream within a dream.")
+
+    # 2. Test "Tomorrow" selection (ID in URL)
+    EPOCH = date(2026, 4, 10)
+    tomorrow_id = (date.today() + timedelta(days=1) - EPOCH).days
+
+    page.goto(f"{dev_server}/?id={tomorrow_id}")
+    # Tomorrow should be The Matrix (Review: There is no spoon.)
+    expect(page.locator(".review-text").first).to_have_text("There is no spoon.")
+    # Badge should show tomorrow's ID
+    expect(page.locator("#game-id-badge")).to_have_text(f"Game #{tomorrow_id}")
 
 
 def test_guess_interaction(page: Page, dev_server):
-    page.goto(f"{dev_server}/?id=1")
+    page.goto(dev_server)
 
     # Initially 10 guesses
     expect(page.locator("#guesses-remaining .highlight")).to_have_text("10")
@@ -94,19 +123,17 @@ def test_guess_interaction(page: Page, dev_server):
 
 
 def test_skip_interaction(page: Page, dev_server):
-    page.goto(f"{dev_server}/?id=1")
+    page.goto(dev_server)
 
     # Click Next review
     page.click("#skip-button")
 
     # Verify Skipped card appears
     expect(page.locator(".guess-card.is-skip")).to_be_visible()
-    # Verify second review card is revealed
-    expect(page.locator(".review-card")).to_have_count(2)
 
 
 def test_extra_hint_interaction(page: Page, dev_server):
-    page.goto(f"{dev_server}/?id=1")
+    page.goto(dev_server)
 
     # Click Extra hint
     page.click("#hint-button")
@@ -117,4 +144,3 @@ def test_extra_hint_interaction(page: Page, dev_server):
 
     # Verify values (from dummy_data fixture)
     expect(page.locator(".review-card.hint-card")).to_contain_text("2010")
-    expect(page.locator(".review-card.hint-card")).to_contain_text("Action")

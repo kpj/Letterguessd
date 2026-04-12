@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isToday = requestedId === todayId;
 
     function setGameIdBadge(id) {
-        if (gameIdBadge) gameIdBadge.textContent = `Game #${id}`;
+        if (gameIdBadge && id !== null) gameIdBadge.textContent = `Game #${id}`;
     }
 
     function setReplayNotice(gameEntry) {
@@ -93,51 +93,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // Two-phase data lookup:
     // 1. Today's game → fast path via movie_data.json
     // 2. Past game    → look up in history.json by ID
-    if (isToday) {
+    // Try to load from the schedule first, regardless of if it's "Today"
+    loadFromSchedule(requestedId);
+
+    function loadFromSchedule(id) {
         fetch(DATA_URL)
             .then(res => res.json())
             .then(data => {
-                if (!data.movies || Object.keys(data.movies).length === 0) {
-                    throw new Error('No movies found in data.');
-                }
-                const dayName = getCurrentDayName();
-                const gameDataList = data.movies[dayName];
+                // Determine target date from ID (using UTC to prevent timezone shifts)
+                const targetDate = new Date(EPOCH.getTime() + (id * 86400000));
+                const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long', timeZone: 'UTC' }).format(targetDate).toLowerCase();
+                const dayMovies = data.movies[dayName];
 
-                // Determine the week number
-                const now = new Date();
-                const start = new Date(now.getFullYear(), 0, 0);
-                const diff = now - start;
-                const weekNum = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
-                const entry = gameDataList[weekNum % gameDataList.length];
+                if (dayMovies && dayMovies.length > 0) {
+                    // Logic for selecting movie from list (week-based rotation)
+                    // We use UTC to remain consistent with targetDate
+                    const targetYear = targetDate.getUTCFullYear();
+                    const startOfYear = new Date(Date.UTC(targetYear, 0, 0));
+                    const diff = targetDate - startOfYear;
+                    const weekNum = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+                    const entry = dayMovies[weekNum % dayMovies.length];
 
-                if (!entry) {
-                    throw new Error(`No movies found for today (${dayName}).`);
+                    if (!entry) throw new Error("Entry not found in schedule.");
+
+                    entry.id = id;
+                    if (id !== todayId) setReplayNotice(entry);
+                    initFromData(entry);
+                } else {
+                    // Not in schedule, look in history archive
+                    loadFromHistory(id);
                 }
-                // Inject the ID so downstream code can reference it
-                entry.id = todayId;
-                initFromData(entry);
             })
             .catch(err => {
-                console.error('Failed to load movie data:', err);
-                showLoadError('Error loading game data. Please try again later.');
+                console.error('Schedule load failed:', err);
+                loadFromHistory(id);
             });
-    } else {
-        // Past game — look up by ID in history.json
-        setGameIdBadge(requestedId);
+    }
+
+    function loadFromHistory(id) {
+        setGameIdBadge(id);
         fetch(HISTORY_URL)
             .then(res => res.json())
             .then(data => {
                 const games = data.games || [];
-                const entry = games.find(g => g.id === requestedId);
-                if (!entry) {
-                    throw new Error(`Game #${requestedId} not found.`);
-                }
+                const entry = games.find(g => g.id === id);
+                if (!entry) throw new Error(`Game #${id} not found.`);
                 setReplayNotice(entry);
                 initFromData(entry);
             })
             .catch(err => {
-                console.error('Failed to load history:', err);
-                showLoadError(`Game #${requestedId} not found. Past games are added to the archive after they have been played.`);
+                console.error('History fetch failed:', err);
+                showLoadError(`Game #${id} not found. Past games are added to the archive after they have been played.`);
             });
     }
 
