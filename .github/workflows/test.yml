@@ -21,7 +21,12 @@ jobs:
         run: uv python install 3.12
 
       - name: Install dependencies
-        run: uv sync --group dev
+        run: uv sync --all-groups
+
+      - name: Lint with ruff
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
 
       - name: Install Playwright Browsers
         run: uv run playwright install chromium --with-deps
