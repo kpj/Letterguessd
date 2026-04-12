@@ -103,7 +103,7 @@ header p {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    padding: 1rem 0 0.5rem 0;
+    padding: max(1rem, env(safe-area-inset-top)) 0 0.5rem 0;
     margin-bottom: 1rem;
     font-weight: 600;
     font-size: 0.9rem;
@@ -306,7 +306,17 @@ header p {
     position: sticky;
     bottom: 0;
     background: linear-gradient(to top, var(--bg-color) 80%, transparent);
-    padding: 1rem 0 2rem 0;
+    padding: 1rem 0 max(2rem, env(safe-area-inset-bottom)) 0;
+}
+
+/* Collapse spacing for small/keyboard-on heights */
+@media (max-height: 550px) {
+    .guess-area {
+        padding-top: 0.5rem;
+    }
+    #guess-form {
+        gap: 0.4rem !important;
+    }
 }
 
 #guess-form {

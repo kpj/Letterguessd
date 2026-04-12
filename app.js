@@ -427,8 +427,16 @@ document.addEventListener('DOMContentLoaded', () => {
         handleHint();
     });
 
-    shareButton.addEventListener('click', () => {
+    shareButton.addEventListener('click', async () => {
         const text = generateShareText();
+        if (navigator.share) {
+            try {
+                await navigator.share({ text: text });
+                return;
+            } catch (err) {
+                // Fallback to clipboard if share fails or is cancelled
+            }
+        }
         navigator.clipboard.writeText(text).then(() => {
             shareToast.classList.remove('hidden');
             setTimeout(() => shareToast.classList.add('hidden'), 2500);
