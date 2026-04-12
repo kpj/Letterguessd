@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const guessInput = document.getElementById('guess-input');
     const skipButton = document.getElementById('skip-button');
     const guessesRemainingEl = document.querySelector('#guesses-remaining .highlight');
-    const feedbackMessage = document.getElementById('feedback-message');
+
     const endScreen = document.getElementById('end-screen');
     const endTitle = document.getElementById('end-title');
     const movieTitleLink = document.getElementById('movie-title-link');
@@ -24,9 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const helpModal = document.getElementById('help-modal');
     const closeHelpBtn = document.getElementById('close-help-btn');
     const closeModalX = document.querySelector('.close-modal');
-    const hintsContainer = document.getElementById('hints-container');
     const hintButton = document.getElementById('hint-button');
-    const hintDisplay = document.getElementById('hint-display');
 
     const MAX_GUESSES = 10;
 
@@ -173,6 +171,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startTimer();
 
+    function scrollToBottom(el) {
+        if (!el) return;
+        // We use a slight timeout to ensure the DOM has updated and style reflows are done
+        setTimeout(() => {
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'end'
+            });
+        }, 50);
+    }
+
     function initGame() {
         updateGuessesDisplay();
         revealNextReview();
@@ -197,8 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.appendChild(authorEl);
             reviewsContainer.appendChild(card);
 
-            // Scroll to the new card smoothly
-            setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'end' }), 50);
+            scrollToBottom(card);
 
             currentReviewIndex++;
         }
@@ -270,15 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
         guessCard.appendChild(guessText);
         reviewsContainer.appendChild(guessCard);
 
+        scrollToBottom(guessCard);
+
         if (guessesMade >= MAX_GUESSES) {
             endGame(false);
             return;
         }
 
-        // Wrong/skip — show feedback and reveal next review
-        feedbackMessage.textContent = isSkip ? 'Next hint revealed.' : `"${guess}" is incorrect.`;
-        feedbackMessage.className = 'feedback-error';
-        setTimeout(() => feedbackMessage.classList.add('hidden'), 2000);
+
 
         if (currentReviewIndex < gameData.reviews.length) {
             revealNextReview();
@@ -303,19 +310,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const genres = gameData.genres.slice(0, 3).join(', ') || 'N/A';
         const year = gameData.year || 'N/A';
 
-        hintDisplay.innerHTML = `
-            <div class="hint-item">
-                <span class="hint-label">Release Year</span>
-                <span class="hint-value">${year}</span>
-            </div>
-            <div class="hint-item">
-                <span class="hint-label">Genres</span>
-                <span class="hint-value">${genres}</span>
+        // 1. Action Card (Small pill)
+        const statusCard = document.createElement('div');
+        statusCard.className = 'guess-card is-hint';
+        statusCard.innerHTML = `
+            <span class="guess-status">💡</span>
+            <span>Extra Hint</span>
+        `;
+        reviewsContainer.appendChild(statusCard);
+
+        // 2. Content Card (Main boxed layout)
+        const contentCard = document.createElement('div');
+        contentCard.className = 'review-card hint-card';
+        contentCard.innerHTML = `
+            <div class="hint-display">
+                <div class="hint-item">
+                    <span class="hint-label">Release Year</span>
+                    <span class="hint-value">${year}</span>
+                </div>
+                <div class="hint-item">
+                    <span class="hint-label">Genres</span>
+                    <span class="hint-value">${genres}</span>
+                </div>
             </div>
         `;
-        hintDisplay.classList.remove('hidden');
-        if (hintsContainer) hintsContainer.classList.remove('hidden');
+        reviewsContainer.appendChild(contentCard);
+
         hintButton.classList.add('hidden'); // Only one hint allowed
+
+        scrollToBottom(contentCard);
 
         // If we ran out of guesses via hint
         if (guessesMade >= MAX_GUESSES) {
@@ -323,9 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Feedback
-        feedbackMessage.textContent = 'Hint revealed! (1 guess spent)';
-        feedbackMessage.className = 'feedback-error';
-        setTimeout(() => feedbackMessage.classList.add('hidden'), 2000);
+
     }
 
     function updateGuessesDisplay() {
@@ -360,6 +381,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render the emoji grid inline in the end screen
         sharePreview.textContent = buildSquares();
+
+        // Scroll so the top of the result is visible
+        setTimeout(() => {
+            endScreen.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }, 100);
     }
 
     function buildSquares() {

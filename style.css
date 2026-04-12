@@ -1,3 +1,8 @@
+html {
+    scroll-behavior: smooth;
+    scroll-padding-bottom: 220px;
+}
+
 :root {
     --bg-color: #14181C;
     --panel-bg: #2C3440;
@@ -182,6 +187,7 @@ header p {
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 2rem;
+    padding-bottom: 200px; /* Space for the sticky guess-area footer */
 }
 
 .guess-card {
@@ -210,6 +216,12 @@ header p {
 
 .guess-card.is-skip {
     opacity: 0.8;
+}
+
+.guess-card.is-hint {
+    color: var(--lb-blue);
+    background: rgba(64, 188, 244, 0.05);
+    border: 1px dashed rgba(64, 188, 244, 0.4);
 }
 
 .guess-card .guess-status {
@@ -288,55 +300,6 @@ header p {
 .hint-btn:hover {
     color: var(--text-highlight);
     border-color: var(--text-primary);
-}
-
-.hint-display {
-    width: 100%;
-    padding: 1.2rem;
-    background: linear-gradient(135deg, rgba(64, 188, 244, 0.05), rgba(0, 224, 84, 0.05));
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-around;
-    gap: 1.5rem;
-    text-align: center;
-    animation: revealPulse 0.4s ease-out;
-}
-
-.hint-item {
-    flex: 1;
-}
-
-@keyframes revealPulse {
-    0% {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-
-    50% {
-        transform: scale(1.02);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.hint-label {
-    display: block;
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-primary);
-    margin-bottom: 0.4rem;
-    opacity: 0.7;
-}
-
-.hint-value {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--lb-blue);
 }
 
 .guess-area {
@@ -422,19 +385,7 @@ button:disabled {
     transform: none;
 }
 
-#feedback-message {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-align: center;
-    padding: 0.5rem;
-    border-radius: 4px;
-}
 
-.feedback-error {
-    color: var(--error-color);
-    background: rgba(255, 119, 85, 0.1);
-}
 
 .glass-panel {
     background: var(--panel-bg-glass);
@@ -492,7 +443,10 @@ button:disabled {
 
 #movie-poster {
     display: block;
-    max-width: 200px;
+    width: 200px;
+    height: auto;
+    aspect-ratio: 2 / 3;
+    background-color: rgba(255, 255, 255, 0.05); /* Placeholder */
     border-radius: 6px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     margin: 0 auto 1.5rem;
@@ -566,4 +520,38 @@ button:disabled {
     width: 100%;
     margin-top: 1rem;
     padding: 1rem;
+}
+
+.hint-display {
+    width: 100%;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, rgba(64, 188, 244, 0.05), rgba(0, 224, 84, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.hint-item {
+    flex: 1;
+}
+
+.hint-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    opacity: 0.7;
+}
+
+.hint-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--lb-blue);
 }
