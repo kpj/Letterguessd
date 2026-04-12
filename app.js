@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!entry) throw new Error("Entry not found in schedule.");
 
                     entry.id = id;
+                    // Inject the calculated date so the replay notice works correctly
+                    entry.date = targetDate.toISOString().split('T')[0];
+
                     if (id !== todayId) setReplayNotice(entry);
                     initFromData(entry);
                 } else {
