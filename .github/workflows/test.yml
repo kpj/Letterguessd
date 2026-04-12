@@ -14,11 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
+      - name: Install uv and Python
         uses: astral-sh/setup-uv@v5
-
-      - name: Set up Python
-        run: uv python install 3.12
+        with:
+          enable-cache: true
+          python-version: '3.12'
 
       - name: Install dependencies
         run: uv sync --all-groups
