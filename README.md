@@ -1,4 +1,5 @@
 # Letterguessd
+![Tests Status](https://github.com/kpj/Letterguessd/actions/workflows/test.yml/badge.svg)
 
 A Letterboxd-inspired movie guessing game. Guess the movie based on popular reviews!
 

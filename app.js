@@ -87,9 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLoadError(msg) {
-        feedbackMessage.textContent = msg;
-        feedbackMessage.className = 'feedback-error';
-        feedbackMessage.classList.remove('hidden');
+        console.error('Game Load Error:', msg);
     }
 
     // Two-phase data lookup:
