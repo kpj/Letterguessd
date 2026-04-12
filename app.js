@@ -435,7 +435,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     shareButton.addEventListener('click', async () => {
         const text = generateShareText();
-        if (navigator.share) {
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        if (isMobile && navigator.share) {
             try {
                 await navigator.share({ text: text });
                 return;
@@ -443,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Fallback to clipboard if share fails or is cancelled
             }
         }
+
         navigator.clipboard.writeText(text).then(() => {
             shareToast.classList.remove('hidden');
             setTimeout(() => shareToast.classList.add('hidden'), 2500);
