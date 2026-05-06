@@ -54,6 +54,11 @@ def harden_scraper():
     Scraper.headers.update(headers)
 
 
+def jitter_sleep(min_s, max_s):
+    """Sleep for a random duration between min_s and max_s."""
+    time.sleep(random.uniform(min_s, max_s))
+
+
 class ReviewSchema(BaseModel):
     text: str = Field(description="The exact text of the review without modification.")
     author: str = Field(description="The author of the review.")
@@ -268,7 +273,7 @@ class MovieProvider:
                 if page_slugs == 0:
                     break
 
-                time.sleep(2 + random.random() * 3)
+                jitter_sleep(2, 5)
             except Exception as e:
                 logger.warning(f"Failed to fetch {url}: {e}")
                 break
@@ -309,7 +314,7 @@ class MovieProvider:
                 if len(articles) < 12:
                     break
 
-                time.sleep(3 + random.random() * 4)
+                jitter_sleep(3, 7)
             except Exception as e:
                 logger.error(f"Error: {e}")
                 break
@@ -318,7 +323,7 @@ class MovieProvider:
 
     def provide_movie_data(self, slug, curator: ReviewCurator = None):
         """High-level orchestrator that returns final game data for a given movie slug."""
-        time.sleep(2 + random.random() * 2)
+        jitter_sleep(2, 4)
 
         try:
             m = Movie(slug)
@@ -484,7 +489,7 @@ class ScraperApp:
                         f"Added ({len(collected_for_day)}/{self.count}) for {day_name} [game #{game_id}, {display_date}]."
                     )
                 else:
-                    time.sleep(2)
+                    jitter_sleep(2, 4)
 
             if len(collected_for_day) < self.count:
                 raise RuntimeError(
@@ -492,6 +497,8 @@ class ScraperApp:
                 )
 
             movies_by_day[day_name] = collected_for_day
+
+            jitter_sleep(10, 20)
 
         self._save_results(movies_by_day)
         self._save_history()
