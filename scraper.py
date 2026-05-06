@@ -27,25 +27,31 @@ USER_AGENTS = [
 
 
 def harden_scraper():
-    """Patch letterboxdpy's Scraper with more robust headers and impersonation settings."""
+    """Patch letterboxdpy's Scraper with robust, browser-consistent headers."""
     ua = random.choice(USER_AGENTS)
-    logger.info(f"Hardening scraper with User-Agent: {ua}")
 
-    # Patch global headers in the letterboxdpy library
-    Scraper.headers.update(
-        {
-            "User-Agent": ua,
-            "Accept-Language": "en-US,en;q=0.9",
-            "Sec-Ch-Ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
-            "Sec-Ch-Ua-Mobile": "?0",
-            "Sec-Ch-Ua-Platform": '"Windows"',
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "none",
-            "Sec-Fetch-User": "?1",
-            "Upgrade-Insecure-Requests": "1",
-        }
-    )
+    # Base headers
+    headers = {
+        "User-Agent": ua,
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Upgrade-Insecure-Requests": "1",
+    }
+
+    # Only add Client Hints for Chromium-based browsers
+    if "Chrome" in ua or "Chromium" in ua:
+        headers.update(
+            {
+                "Sec-Ch-Ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+                "Sec-Ch-Ua-Mobile": "?0",
+                "Sec-Ch-Ua-Platform": '"Windows"' if "Windows" in ua else '"macOS"',
+            }
+        )
+
+    Scraper.headers.update(headers)
 
 
 class ReviewSchema(BaseModel):
