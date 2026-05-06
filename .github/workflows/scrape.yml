@@ -5,6 +5,10 @@ on:
     - cron: '0 0 * * 0' # Runs at 00:00 UTC every Sunday
   workflow_dispatch: # Allows manual triggering
 
+concurrency:
+  group: scrape-and-deploy
+  cancel-in-progress: true
+
 jobs:
   scrape-and-deploy:
     runs-on: ubuntu-latest
