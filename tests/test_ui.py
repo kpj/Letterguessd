@@ -2,14 +2,11 @@ import functools
 import json
 import os
 import threading
-from datetime import date
+from datetime import date, timedelta
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 import pytest
 from playwright.sync_api import Page, expect
-
-
-from datetime import timedelta
 
 
 @pytest.fixture(scope="module", autouse=True)

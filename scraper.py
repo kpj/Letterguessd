@@ -10,10 +10,42 @@ from datetime import date, timedelta
 import dotenv
 import yaml
 from google import genai
+from letterboxdpy.core.exceptions import AccessDeniedError
 from letterboxdpy.core.scraper import Scraper
 from letterboxdpy.movie import Movie
 from loguru import logger
 from pydantic import BaseModel, Field
+
+USER_AGENTS = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:125.0) Gecko/20100101 Firefox/125.0",
+]
+
+
+def harden_scraper():
+    """Patch letterboxdpy's Scraper with more robust headers and impersonation settings."""
+    ua = random.choice(USER_AGENTS)
+    logger.info(f"Hardening scraper with User-Agent: {ua}")
+
+    # Patch global headers in the letterboxdpy library
+    Scraper.headers.update(
+        {
+            "User-Agent": ua,
+            "Accept-Language": "en-US,en;q=0.9",
+            "Sec-Ch-Ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            "Sec-Ch-Ua-Mobile": "?0",
+            "Sec-Ch-Ua-Platform": '"Windows"',
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-User": "?1",
+            "Upgrade-Insecure-Requests": "1",
+        }
+    )
 
 
 class ReviewSchema(BaseModel):
@@ -229,7 +261,8 @@ class MovieProvider:
                 logger.info(f"Found {page_slugs} movies on this page.")
                 if page_slugs == 0:
                     break
-                time.sleep(1)
+
+                time.sleep(2 + random.random() * 3)
             except Exception as e:
                 logger.warning(f"Failed to fetch {url}: {e}")
                 break
@@ -269,15 +302,18 @@ class MovieProvider:
 
                 if len(articles) < 12:
                     break
-                time.sleep(1.5)
+
+                time.sleep(3 + random.random() * 4)
             except Exception as e:
                 logger.error(f"Error: {e}")
                 break
+
         return reviews_data
 
     def provide_movie_data(self, slug, curator: ReviewCurator = None):
         """High-level orchestrator that returns final game data for a given movie slug."""
-        time.sleep(1)  # Initial delay
+        time.sleep(2 + random.random() * 2)
+
         try:
             m = Movie(slug)
             title, year = m.title, m.year
@@ -480,6 +516,8 @@ def main():
     args = parser.parse_args()
 
     dotenv.load_dotenv()
+
+    harden_scraper()
 
     app = ScraperApp(args.count, args.no_llm, args.config)
     app.run()
