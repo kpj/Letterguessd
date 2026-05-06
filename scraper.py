@@ -359,6 +359,9 @@ class MovieProvider:
                 "poster": m.poster or "",
                 "reviews": final_reviews,
             }
+        except AccessDeniedError:
+            # Re-raise hard errors to stop the run immediately
+            raise
         except Exception as e:
             logger.error(f"Error processing {slug}: {e}")
             return None
@@ -477,13 +480,12 @@ class ScraperApp:
                 else:
                     time.sleep(2)
 
-            if not collected_for_day:
-                logger.error(f"Failed to find any viable movie for {day_name}.")
-            else:
-                movies_by_day[day_name] = collected_for_day
+            if len(collected_for_day) < self.count:
+                raise RuntimeError(
+                    f"Failed to collect {self.count} movies for {day_name} (only found {len(collected_for_day)}). "
+                )
 
-        if not movies_by_day:
-            raise RuntimeError("No movies gathered.")
+            movies_by_day[day_name] = collected_for_day
 
         self._save_results(movies_by_day)
         self._save_history()
