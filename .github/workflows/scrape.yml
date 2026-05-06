@@ -28,9 +28,14 @@ jobs:
           wget -q https://raw.githubusercontent.com/kpj/Letterguessd/data/history.json || echo '{"games":[]}' > history.json
 
       - name: Run scraper
+        uses: nick-fields/retry@v4
+        with:
+          timeout_minutes: 180
+          max_attempts: 10
+          command: uv run scraper.py
+          retry_on: error
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: uv run scraper.py
 
       - name: Commit and push to data branch
         run: |
