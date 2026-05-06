@@ -237,20 +237,16 @@ class MovieProvider:
             except ValueError:
                 pass
 
-        start_page = random.randint(1, max_page)
-
-        pages_to_fetch = min(6, max_page - start_page + 1)
-        if pages_to_fetch < 6 and max_page >= 6:
-            start_page = max(1, max_page - 5)
-            pages_to_fetch = 6
+        # Select up to 6 random page numbers to fetch
+        all_pages = list(range(1, max_page + 1))
+        pages_to_fetch = random.sample(all_pages, min(6, max_page))
 
         logger.info(
-            f"Max page is {max_page}. Selected start_page {start_page}, will fetch {pages_to_fetch} page(s)."
+            f"Max page is {max_page}. Selected {len(pages_to_fetch)} random pages: {sorted(pages_to_fetch)}"
         )
 
         base_url_cleaned = base_url.rstrip("/")
-        for i in range(pages_to_fetch):
-            page_num = start_page + i
+        for page_num in pages_to_fetch:
             url = (
                 f"{base_url_cleaned}/page/{page_num}/"
                 if page_num > 1
