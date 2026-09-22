@@ -3,7 +3,7 @@
     "monday": [
       {
         "title": "Resident Evil",
-        "year": null,
+        "year": 2026,
         "genres": [],
         "directors": [],
         "cast": [],
@@ -56,7 +56,7 @@
     "tuesday": [
       {
         "title": "Hope",
-        "year": null,
+        "year": 2026,
         "genres": [],
         "directors": [],
         "cast": [],
@@ -109,7 +109,7 @@
     "wednesday": [
       {
         "title": "La La Land",
-        "year": null,
+        "year": 2016,
         "genres": [],
         "directors": [],
         "cast": [],
@@ -162,7 +162,7 @@
     "thursday": [
       {
         "title": "Superbad",
-        "year": null,
+        "year": 2007,
         "genres": [],
         "directors": [],
         "cast": [],
@@ -215,7 +215,7 @@
     "friday": [
       {
         "title": "3 Women",
-        "year": null,
+        "year": 1977,
         "genres": [],
         "directors": [],
         "cast": [],
@@ -268,7 +268,7 @@
     "saturday": [
       {
         "title": "Once Upon a Time in the West",
-        "year": null,
+        "year": 1968,
         "genres": [],
         "directors": [],
         "cast": [],
@@ -321,7 +321,7 @@
     "sunday": [
       {
         "title": "Pastoral: To Die in the Country",
-        "year": null,
+        "year": 1974,
         "genres": [],
         "directors": [],
         "cast": [],
