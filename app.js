@@ -30,9 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Game ID system — epoch = 2026-04-10, so ID 1 = April 11 2026
     const EPOCH = new Date(Date.UTC(2026, 3, 10)); // month is 0-indexed
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
     function getGameId(forDate) {
         const d = Date.UTC(forDate.getFullYear(), forDate.getMonth(), forDate.getDate());
-        return Math.floor((d - EPOCH) / 86400000);
+        return Math.floor((d - EPOCH) / MS_PER_DAY);
     }
 
     let gameData = null;       // the selected movie object
@@ -91,39 +92,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Two-phase data lookup:
-    // 1. Today's game → fast path via movie_data.json
-    // 2. Past game    → look up in history.json by ID
-    // Try to load from the schedule first, regardless of if it's "Today"
-    loadFromSchedule(requestedId);
+    // 1. Current / upcoming game: check movie_data.json for a matching entry by ID.
+    // 2. Past game (or unmapped ID): look up in history.json by ID.
+    loadGame(requestedId);
 
-    function loadFromSchedule(id) {
+    function loadGame(id) {
         fetch(DATA_URL)
             .then(res => res.json())
             .then(data => {
-                // Determine target date from ID (using UTC to prevent timezone shifts)
-                const targetDate = new Date(EPOCH.getTime() + (id * 86400000));
-                const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long', timeZone: 'UTC' }).format(targetDate).toLowerCase();
-                const dayMovies = data.movies[dayName];
+                let entry = null;
 
-                if (dayMovies && dayMovies.length > 0) {
-                    // Logic for selecting movie from list (week-based rotation)
-                    // We use UTC to remain consistent with targetDate
-                    const targetYear = targetDate.getUTCFullYear();
-                    const startOfYear = new Date(Date.UTC(targetYear, 0, 0));
-                    const diff = targetDate - startOfYear;
-                    const weekNum = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
-                    const entry = dayMovies[weekNum % dayMovies.length];
+                if (data && data.movies) {
+                    // Search for an explicit matching ID across all scheduled days
+                    for (const day of Object.keys(data.movies)) {
+                        const match = data.movies[day].find(m => m.id === id);
+                        if (match) {
+                            entry = match;
+                            break;
+                        }
+                    }
 
-                    if (!entry) throw new Error("Entry not found in schedule.");
+                    // Fallback for fixtures or un-dated entries:
+                    // Only match by weekday if this is today or a future day (not past replay)
+                    if (!entry && id >= todayId) {
+                        const targetDate = new Date(EPOCH.getTime() + (id * MS_PER_DAY));
+                        const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long', timeZone: 'UTC' }).format(targetDate).toLowerCase();
+                        const dayMovies = data.movies[dayName];
+                        if (dayMovies && dayMovies.length > 0) {
+                            const candidate = dayMovies[0];
+                            if (candidate.id === undefined || candidate.id === id) {
+                                entry = candidate;
+                                entry.id = id;
+                                entry.date = targetDate.toISOString().split('T')[0];
+                            }
+                        }
+                    }
+                }
 
-                    entry.id = id;
-                    // Inject the calculated date so the replay notice works correctly
-                    entry.date = targetDate.toISOString().split('T')[0];
-
+                if (entry) {
                     if (id !== todayId) setReplayNotice(entry);
                     initFromData(entry);
                 } else {
-                    // Not in schedule, look in history archive
                     loadFromHistory(id);
                 }
             })
@@ -141,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const games = data.games || [];
                 const entry = games.find(g => g.id === id);
                 if (!entry) throw new Error(`Game #${id} not found.`);
-                setReplayNotice(entry);
+                if (id !== todayId) setReplayNotice(entry);
                 initFromData(entry);
             })
             .catch(err => {

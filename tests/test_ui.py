@@ -48,9 +48,35 @@ def dev_server(tmp_path_factory):
         "reviews": [{"text": "There is no spoon.", "author": "User 2"}],
     }
 
-    dummy_data = {
-        "movies": {today_name: [today_movie], tomorrow_name: [tomorrow_movie]}
-    }
+    days = [
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ]
+    dummy_movies = {}
+    for d in days:
+        if d == today_name:
+            dummy_movies[d] = [today_movie]
+        elif d == tomorrow_name:
+            dummy_movies[d] = [tomorrow_movie]
+        else:
+            dummy_movies[d] = [
+                {
+                    "title": f"Movie for {d.capitalize()}",
+                    "year": "2020",
+                    "genres": ["Drama"],
+                    "directors": ["Director"],
+                    "cast": ["Actor"],
+                    "poster": "",
+                    "reviews": [{"text": f"Review for {d}.", "author": "Reviewer"}],
+                }
+            ]
+
+    dummy_data = {"movies": dummy_movies}
 
     with open(tmp_dir / "movie_data.json", "w") as f:
         json.dump(dummy_data, f)
