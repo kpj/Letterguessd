@@ -18,8 +18,59 @@ def test_display_date_for_day(mocker):
     mock_date.today.return_value = date(2026, 4, 12)
     mock_date.side_effect = lambda *args, **kwargs: date(*args, **kwargs)
 
+    # Monday should be tomorrow (April 13)
     d = ScraperApp._display_date_for_day("monday")
     assert d == date(2026, 4, 13)
+
+    # Sunday should be the concluding Sunday of the upcoming cycle (+7 days, April 19)
+    d_sun = ScraperApp._display_date_for_day("sunday")
+    assert d_sun == date(2026, 4, 19)
+
+
+def test_history_deduplication(mocker, tmp_path):
+    mocker.patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key"})
+    test_history = str(tmp_path / "test_history.json")
+    with open(test_history, "w") as f:
+        json.dump(
+            {
+                "games": [
+                    {
+                        "id": 1,
+                        "date": "2026-04-11",
+                        "day": "saturday",
+                        "slug": "old-slug",
+                        "title": "Old Movie",
+                    }
+                ]
+            },
+            f,
+        )
+
+    app = ScraperApp(count=1, no_llm=True)
+    app.history_file = test_history
+    app.history = app._load_history()
+
+    # Re-running for ID 1 should replace, not duplicate
+    game_entry = {
+        "id": 1,
+        "date": "2026-04-11",
+        "day": "saturday",
+        "slug": "new-slug",
+        "title": "Updated Movie",
+    }
+    games = app.history.setdefault("games", [])
+    existing_idx = next((i for i, g in enumerate(games) if g.get("id") == 1), None)
+    if existing_idx is not None:
+        games[existing_idx] = game_entry
+    else:
+        games.append(game_entry)
+
+    app._save_history()
+
+    with open(test_history) as f:
+        data = json.load(f)
+    assert len(data["games"]) == 1
+    assert data["games"][0]["title"] == "Updated Movie"
 
 
 def test_review_validation():

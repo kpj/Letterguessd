@@ -411,6 +411,8 @@ class ScraperApp:
 
     def _save_history(self):
         try:
+            if "games" in self.history:
+                self.history["games"].sort(key=lambda g: g.get("id", 0))
             with open(self.history_file, "w") as f:
                 json.dump(self.history, f, indent=2)
         except Exception as e:
@@ -418,7 +420,7 @@ class ScraperApp:
 
     @staticmethod
     def _display_date_for_day(day_name: str) -> date:
-        """Return the nearest upcoming date (today or future) matching the given weekday name."""
+        """Return the upcoming date matching the given weekday name for the scheduled cycle (1-7 days ahead)."""
         today = date.today()
         day_names = [
             "monday",
@@ -431,6 +433,8 @@ class ScraperApp:
         ]
         target_weekday = day_names.index(day_name.lower())
         days_ahead = (target_weekday - today.weekday()) % 7
+        if days_ahead == 0:
+            days_ahead = 7
         return today + timedelta(days=days_ahead)
 
     @staticmethod
@@ -467,19 +471,27 @@ class ScraperApp:
 
                 data = self.provider.provide_movie_data(slug, self.curator)
                 if data:
-                    collected_for_day.append(data)
                     used_slugs_this_run.add(slug)
 
-                    # Archive full game record for future replay
-                    self.history.setdefault("games", []).append(
-                        {
-                            "id": game_id,
-                            "date": display_date.isoformat(),
-                            "day": day_name.lower(),
-                            "slug": slug,
-                            **data,
-                        }
+                    game_entry = {
+                        "id": game_id,
+                        "date": display_date.isoformat(),
+                        "day": day_name.lower(),
+                        "slug": slug,
+                        **data,
+                    }
+                    collected_for_day.append(game_entry)
+
+                    # Update or append in history
+                    games = self.history.setdefault("games", [])
+                    existing_idx = next(
+                        (i for i, g in enumerate(games) if g.get("id") == game_id),
+                        None,
                     )
+                    if existing_idx is not None:
+                        games[existing_idx] = game_entry
+                    else:
+                        games.append(game_entry)
 
                     logger.success(
                         f"Added ({len(collected_for_day)}/{self.count}) for {day_name} [game #{game_id}, {display_date}]."
