@@ -117,11 +117,11 @@ def test_curate_reviews_retry_with_backoff(mocker):
     assert client.models.generate_content.call_count == 2
     assert (
         client.models.generate_content.call_args_list[0].kwargs["model"]
-        == "gemini-flash-latest"
+        == "gemini-flash-lite-latest"
     )
     assert (
         client.models.generate_content.call_args_list[1].kwargs["model"]
-        == "gemini-flash-latest"
+        == "gemini-flash-lite-latest"
     )
     assert mock_sleep.called
 

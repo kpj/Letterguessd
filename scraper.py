@@ -67,7 +67,7 @@ class ReviewSchema(BaseModel):
 class ReviewCurator:
     """Handles interaction with Gemini AI to select and rank movie review clues."""
 
-    def __init__(self, api_key: str, model: str = "gemini-flash-latest"):
+    def __init__(self, api_key: str, model: str = "gemini-flash-lite-latest"):
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY not set.")
         self.client = genai.Client(api_key=api_key)
