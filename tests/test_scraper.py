@@ -12,8 +12,8 @@ def test_game_id_logic():
 
 
 def test_display_date_for_day(mocker):
-    # April 13, 2026 is a Monday.
-    # Suppose "today" is Sunday, April 12.
+    # Case 1: "today" is Sunday, April 12, 2026.
+    # Targets the upcoming week: Monday April 13 to Sunday April 19.
     mock_date = mocker.patch("scraper.date")
     mock_date.today.return_value = date(2026, 4, 12)
     mock_date.side_effect = lambda *args, **kwargs: date(*args, **kwargs)
@@ -22,9 +22,25 @@ def test_display_date_for_day(mocker):
     d = ScraperApp._display_date_for_day("monday")
     assert d == date(2026, 4, 13)
 
-    # Sunday should be the concluding Sunday of the upcoming cycle (+7 days, April 19)
+    # Sunday should be the concluding Sunday of the upcoming cycle (April 19)
     d_sun = ScraperApp._display_date_for_day("sunday")
     assert d_sun == date(2026, 4, 19)
+
+    # Case 2: Mid-week run on Wednesday, October 14, 2026.
+    # Should target the current week: Monday Oct 12 to Sunday Oct 18.
+    mock_date.today.return_value = date(2026, 10, 14)
+    assert ScraperApp._display_date_for_day("monday") == date(2026, 10, 12)
+    assert ScraperApp._display_date_for_day("wednesday") == date(2026, 10, 14)
+    assert ScraperApp._display_date_for_day("sunday") == date(2026, 10, 18)
+
+    # Case 3: Mid-week run with next_week=True.
+    # Shifts target to the next week: Monday Oct 19 to Sunday Oct 25.
+    assert ScraperApp._display_date_for_day("monday", next_week=True) == date(
+        2026, 10, 19
+    )
+    assert ScraperApp._display_date_for_day("wednesday", next_week=True) == date(
+        2026, 10, 21
+    )
 
 
 def test_history_deduplication(mocker, tmp_path):

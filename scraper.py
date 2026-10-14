@@ -389,8 +389,15 @@ _EPOCH = date(2026, 4, 10)
 class ScraperApp:
     """The main application that coordinates the scraping process."""
 
-    def __init__(self, count, no_llm=False, config_file="schedule.yml"):
+    def __init__(
+        self,
+        count,
+        no_llm=False,
+        config_file="schedule.yml",
+        next_week=False,
+    ):
         self.count = count
+        self.next_week = next_week
         self.provider = MovieProvider()
         self.curator = (
             ReviewCurator(os.environ.get("GEMINI_API_KEY")) if not no_llm else None
@@ -426,10 +433,35 @@ class ScraperApp:
         except Exception as e:
             logger.error(f"Failed to save {self.history_file}: {e}")
 
-    @staticmethod
-    def _display_date_for_day(day_name: str) -> date:
-        """Return the upcoming date matching the given weekday name for the scheduled cycle (1-7 days ahead)."""
-        today = date.today()
+    @classmethod
+    def _target_monday(cls, today: date | None = None, next_week: bool = False) -> date:
+        """Determine the Monday of the target weekly cycle.
+
+        - When run on Sunday (normal weekly cron), target the upcoming week (tomorrow's Monday).
+        - When run mid-week (Mon-Sat, e.g. recovery / manual runs), target the current week's Monday.
+        - If next_week=True, shift target by +7 days.
+        """
+        if today is None:
+            today = date.today()
+        weekday = today.weekday()  # Monday = 0, Sunday = 6
+        if weekday == 6:
+            base_monday = today + timedelta(days=1)
+        else:
+            base_monday = today - timedelta(days=weekday)
+
+        if next_week:
+            base_monday += timedelta(days=7)
+
+        return base_monday
+
+    @classmethod
+    def _display_date_for_day(
+        cls,
+        day_name: str,
+        today: date | None = None,
+        next_week: bool = False,
+    ) -> date:
+        """Return the calendar date matching the given weekday name for the target weekly cycle."""
         day_names = [
             "monday",
             "tuesday",
@@ -440,10 +472,8 @@ class ScraperApp:
             "sunday",
         ]
         target_weekday = day_names.index(day_name.lower())
-        days_ahead = (target_weekday - today.weekday()) % 7
-        if days_ahead == 0:
-            days_ahead = 7
-        return today + timedelta(days=days_ahead)
+        monday = cls._target_monday(today, next_week=next_week)
+        return monday + timedelta(days=target_weekday)
 
     @staticmethod
     def _game_id_for_date(d: date) -> int:
@@ -463,7 +493,9 @@ class ScraperApp:
             slugs = self.provider.get_list_slugs(list_url)
             random.shuffle(slugs)
 
-            display_date = self._display_date_for_day(day_name)
+            display_date = self._display_date_for_day(
+                day_name, next_week=self.next_week
+            )
             game_id = self._game_id_for_date(display_date)
 
             collected_for_day = []
@@ -544,13 +576,18 @@ def main():
         action="store_true",
         help="Bypass Gemini LLM and use first 10 reviews as fallback",
     )
+    parser.add_argument(
+        "--next-week",
+        action="store_true",
+        help="Target next week's cycle rather than current week during mid-week runs",
+    )
     args = parser.parse_args()
 
     dotenv.load_dotenv()
 
     harden_scraper()
 
-    app = ScraperApp(args.count, args.no_llm, args.config)
+    app = ScraperApp(args.count, args.no_llm, args.config, args.next_week)
     app.run()
 
 
