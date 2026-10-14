@@ -67,10 +67,11 @@ class ReviewSchema(BaseModel):
 class ReviewCurator:
     """Handles interaction with Gemini AI to select and rank movie review clues."""
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, model: str = "gemini-flash-latest"):
         if not api_key:
             raise RuntimeError("GEMINI_API_KEY not set.")
         self.client = genai.Client(api_key=api_key)
+        self.model = model
 
     @staticmethod
     def _is_valid_review(text, author, title, original_texts=None):
@@ -133,7 +134,8 @@ class ReviewCurator:
         working_pool = working_pool[:50]
         original_texts = {text for text, _ in working_pool}
 
-        for attempt in range(3):
+        max_attempts = 5
+        for attempt in range(max_attempts):
             # Format input for LLM
             reviews_input = [
                 f"[{i}] Author: {a}\nReview: {t}"
@@ -166,7 +168,7 @@ class ReviewCurator:
 
             try:
                 response = self.client.models.generate_content(
-                    model="gemini-3-flash-preview",
+                    model=self.model,
                     contents=prompt,
                     config={
                         "response_mime_type": "application/json",
@@ -204,9 +206,15 @@ class ReviewCurator:
                     logger.warning("Working pool exhausted below 10 reviews.")
                     break
 
+                time.sleep(3)
+
             except Exception as e:
-                logger.error(f"LLM attempt {attempt + 1} failed: {e}")
-                time.sleep(2)
+                wait_time = min(60.0, (2**attempt) * 5.0 + random.uniform(1.0, 3.0))
+                logger.error(
+                    f"LLM attempt {attempt + 1}/{max_attempts} failed: {e}. "
+                    f"Waiting {wait_time:.1f}s before retrying..."
+                )
+                time.sleep(wait_time)
 
         return None
 

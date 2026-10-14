@@ -92,6 +92,40 @@ def test_review_validation():
     )
 
 
+def test_curate_reviews_retry_with_backoff(mocker):
+    mocker.patch.dict(os.environ, {"GEMINI_API_KEY": "fake-key"})
+    mock_genai = mocker.patch("scraper.genai.Client")
+    mock_sleep = mocker.patch("scraper.time.sleep")
+    client = mock_genai.return_value
+
+    mock_resp = mocker.MagicMock()
+    clues = [{"text": f"Review clue {i}", "author": f"User {i}"} for i in range(10)]
+    mock_resp.text = json.dumps(clues)
+
+    # First call fails with 503, second call succeeds
+    client.models.generate_content.side_effect = [
+        RuntimeError("503 UNAVAILABLE"),
+        mock_resp,
+    ]
+
+    curator = ReviewCurator(api_key="fake-key")
+    reviews_data = [(f"Review clue {i}", f"User {i}") for i in range(15)]
+    result = curator.curate_reviews("Test Movie", 2024, reviews_data)
+
+    assert result is not None
+    assert len(result) == 10
+    assert client.models.generate_content.call_count == 2
+    assert (
+        client.models.generate_content.call_args_list[0].kwargs["model"]
+        == "gemini-flash-latest"
+    )
+    assert (
+        client.models.generate_content.call_args_list[1].kwargs["model"]
+        == "gemini-flash-latest"
+    )
+    assert mock_sleep.called
+
+
 def test_full_scrape_integration(mocker, tmp_path):
     # 1. Mock movie data (Letterboxdpy Movie class)
     mock_movie = mocker.patch("scraper.Movie")
