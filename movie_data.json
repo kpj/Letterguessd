@@ -1,0 +1,510 @@
+{
+  "movies": {
+    "monday": [
+      {
+        "id": 199,
+        "date": "2026-10-26",
+        "day": "monday",
+        "slug": "street-fighter-2026",
+        "title": "Street Fighter",
+        "year": 2026,
+        "genres": [
+          "Fantasy",
+          "Action"
+        ],
+        "directors": [
+          "Kitao Sakurai"
+        ],
+        "cast": [
+          "Andrew Koji",
+          "Noah Centineo",
+          "Callina Liang",
+          "Joe Anoa'i",
+          "David Dastmalchian"
+        ],
+        "link": "https://letterboxd.com/film/street-fighter-2026/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/1/0/4/0/2/9/0/1040290-street-fighter-2026-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "Sometimes \u201eYou Lose\u201c, sometimes \u201eYou Win\u201c. This movie miraculously does both at the same time.",
+            "author": "BeHaind"
+          },
+          {
+            "text": "100 consecutive scenes of a character angrily arriving somewhere set to a Buzz Bin classic.",
+            "author": "Sean Fennessey"
+          },
+          {
+            "text": "i feel like asking my dad for quarters",
+            "author": "\u22c6.\u02da\u272e a l e x \u272e\u02da.\u22c6"
+          },
+          {
+            "text": "fun-ish and cheesy. the exact movie you\u2019re expecting.",
+            "author": "George Carmi"
+          },
+          {
+            "text": "i came for a hadouken and left with a headache. \ud83d\ude0f",
+            "author": "Esha"
+          },
+          {
+            "text": "Ridiculously good when it comes to the characters and their backstories, which are spot on, and the irreverent, smart-ass way the film presents and shows itself without taking anything seriously. Ridiculously bad when all those good elements are stuffed into a non-existent story, featuring an editing that looks like a TikTok feed viewed while tripping on acid and a runtime that, combined with that editing, turns into an unprovoked assault on the viewer's eyes and brain.",
+            "author": "JackFolla"
+          },
+          {
+            "text": "a film that tries a little too desperately to feel like a B-movie, randomly flying by to please you for 2hrs, but having no agenda except \"let\u2019s have a good time, homie!\". hard to buy that from a major studio though. the calculations behind these shenanigans are visible in between: specifically riding the 90s nostalgia wave, including yours truly beloved teenage hits from MTV - Soundgarden, 2Pac, The Offspring and co are prominently & extensively pumped here, putting a focus on\u2026",
+            "author": "shookone"
+          },
+          {
+            "text": "Callina Liang. That's it. That's the review",
+            "author": "Ray"
+          },
+          {
+            "text": "You had one of the greatest video game soundtracks and you're going to have Ken come out to \u201cWho Let the Dogs Out?\u201d Man, fuck this movie",
+            "author": "Siddu \ud83c\udf1e"
+          },
+          {
+            "text": "\u201cFor me, the day I watched this movie was the worst cinematic experience of my life. For the studio, it was Thursday.\u201d \u2b50\u2606\u2606\u2606\u2606",
+            "author": "Mister Cap (english/german)"
+          }
+        ]
+      }
+    ],
+    "tuesday": [
+      {
+        "id": 200,
+        "date": "2026-10-27",
+        "day": "tuesday",
+        "slug": "love-of-your-life",
+        "title": "Love of Your Life",
+        "year": 2026,
+        "genres": [
+          "Romance",
+          "Drama"
+        ],
+        "directors": [
+          "Rachel Morrison"
+        ],
+        "cast": [
+          "Margaret Qualley",
+          "Gabriel Basso",
+          "Aaron Pierre",
+          "Patrick Schwarzenegger",
+          "Catherine Keener"
+        ],
+        "link": "https://letterboxd.com/film/love-of-your-life/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/6/6/9/2/2/1266922-love-of-your-life-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "what a privilege and a curse it is to feel.click hereto check out an edit i made of this film :)",
+            "author": "dima"
+          },
+          {
+            "text": "The Worst Person In The Greater Boston Area",
+            "author": "Kai Czarnowski"
+          },
+          {
+            "text": "A movie that requires you to actively hydrate halfway through because the second half will drain every drop of moisture from your body",
+            "author": "Nayeem"
+          },
+          {
+            "text": "loved where it was going then BAM its 2020",
+            "author": "Emely\ud83e\udd0d"
+          },
+          {
+            "text": "A drama movie about love, grief and forgiveness that plays pre- and past COVID and then they are playing APOCALYPSE BY CIGARETTES AFTER SEX??? \ud83d\udc68\ud83c\udffd\u200d\ud83c\udf73 And shoutout to every nurse, y\u2019all have my biggest respect.",
+            "author": "sench"
+          },
+          {
+            "text": "\u200bnever letting a random stranger talk to me by the ocean ever again.",
+            "author": "Osammma"
+          },
+          {
+            "text": "so actually WHAT was that pacing and plot",
+            "author": "rainenthusiast"
+          },
+          {
+            "text": "Cigarettes After Sex\u2019s best music video.",
+            "author": "Miguel \u00c1ngel Zapata"
+          },
+          {
+            "text": "Gabriel Basso\u2026\u2026you\u2019ve charmed me",
+            "author": "Sophie Holsinger"
+          },
+          {
+            "text": "gabriel basso you have to stop. your face too pretty. your soul too pure. your dead wife energy too strong. they\u2019ll kill you",
+            "author": "natalie"
+          }
+        ]
+      }
+    ],
+    "wednesday": [
+      {
+        "id": 201,
+        "date": "2026-10-28",
+        "day": "wednesday",
+        "slug": "forrest-gump",
+        "title": "Forrest Gump",
+        "year": 1994,
+        "genres": [
+          "Drama",
+          "Romance",
+          "Comedy",
+          "Moving relationship stories",
+          "Humanity and the world around us",
+          "Heartfelt and sentimental family stories",
+          "Emotional and heartfelt family dramas",
+          "Powerful stories of heartbreak and suffering",
+          "Heartbreaking and moving family drama",
+          "Emotional and captivating fantasy storytelling"
+        ],
+        "directors": [
+          "Robert Zemeckis"
+        ],
+        "cast": [
+          "Tom Hanks",
+          "Robin Wright",
+          "Gary Sinise",
+          "Sally Field",
+          "Mykelti Williamson"
+        ],
+        "link": "https://letterboxd.com/film/forrest-gump/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/2/7/0/4/2704-forrest-gump-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "Lead poisoning's last great cultural victory.",
+            "author": "Branson Reese"
+          },
+          {
+            "text": "This is like, some kind of weird, conservative fantasy. If watching this served any good purpose, it's a possibly vital reminder that the Clinton era was not as progressive as many of us might like to remember - the latter half of the 20th century in America through the eyes of a reactionary, nearly 50 years of social tumult regarded as just a brief phase of unrest before everything returns to 'normal,' - the Vietnam War, Black Panthers, and social\u2026",
+            "author": "Neil Bahadur"
+          },
+          {
+            "text": "I didn't realize why people hate this film until it clicked with me that this is what Boomers honestly believe about their lives and history. No alternative outcomes, no possible way that things could have been better. Just a complete surrender to cynicism. Of course it won Oscars.",
+            "author": "COBRARocky"
+          },
+          {
+            "text": "\"ALONG THE WATCHTOWER\"\"Hound Dog\"\"Rebel Rouser\"\"(I Don't Know Why) But I Do\"\"Walk Right In\"\"Land of 1000 Dances\"\"Blowin' in the Wind\"\"I Can't Help Myself (Sugar Pie Honey Bunch)\"\"Respect\"\"Rainy Day Women #12 and 35\"\"Sloop John B\"\"California Dreamin\"\"For What It's Worth\"\"What The World Needs Now\"\"Break on Through (To The Other Side)\"\"Mrs. Robinson\"\"Volunteers\"\"Get Together\"\"San Francisco (Be Sure To Wear Flowers In Your Hair)\"\"Turn! Turn! Turn! (To\u2026",
+            "author": "Fritz Lewis"
+          },
+          {
+            "text": "A movie about a man who runs and enjoys cutting grass.",
+            "author": "alor"
+          },
+          {
+            "text": "tag yourselfi'm the woman at the start who doesn't care about his story at all",
+            "author": "c.w. scott"
+          },
+          {
+            "text": "\"some kind of fruit company\" *shows apple the tech company* - I DIED",
+            "author": "hailey \ud83c\udf3c"
+          },
+          {
+            "text": "Jenny didn\u2019t deserve Forrest and Forrest deserved better",
+            "author": "Wade"
+          },
+          {
+            "text": "Who wants to start a shrimping business with me????",
+            "author": "\u2764\ufe0e"
+          },
+          {
+            "text": "tom hanks gotta have one of the top 5 foreheads in hollywood",
+            "author": "aksel"
+          }
+        ]
+      }
+    ],
+    "thursday": [
+      {
+        "id": 202,
+        "date": "2026-10-29",
+        "day": "thursday",
+        "slug": "gone-girl",
+        "title": "Gone Girl",
+        "year": 2014,
+        "genres": [
+          "Drama",
+          "Mystery",
+          "Thriller",
+          "Thrillers and murder mysteries",
+          "Intense violence and sexual transgression",
+          "Suspenseful crime thrillers",
+          "Twisted dark psychological thriller",
+          "Noir and dark crime dramas",
+          "Intriguing and suspenseful murder mysteries",
+          "Gripping, intense violent crime"
+        ],
+        "directors": [
+          "David Fincher"
+        ],
+        "cast": [
+          "Ben Affleck",
+          "Rosamund Pike",
+          "Neil Patrick Harris",
+          "Tyler Perry",
+          "Carrie Coon"
+        ],
+        "link": "https://letterboxd.com/film/gone-girl/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/1/4/9/8/5/7/149857-gone-girl-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "Whenever I think about getting back together with my ex, I watch this film. Works like a charm every time.",
+            "author": "Wesley R. Ball"
+          },
+          {
+            "text": "the greatest rom-com ever made",
+            "author": "shannon"
+          },
+          {
+            "text": "me whenever i'm in public alone and a man walks near me: this man may kill me",
+            "author": "cathy"
+          },
+          {
+            "text": "Marriage is fucking scary, you guys.",
+            "author": "YI JIAN"
+          },
+          {
+            "text": "i support women's rights. but I also support women's wrongs. i love when they do bad things.",
+            "author": "ale"
+          },
+          {
+            "text": "These people are such sacks of shit! I love it!",
+            "author": "Patrick Willems"
+          },
+          {
+            "text": "didn\u2019t realize this was a bad airplane movie until it was too late",
+            "author": "Karsten"
+          },
+          {
+            "text": "*ben affleck whining voice* \"i am so SICK of being picked apart by women\" there it is. my favourite line in cinematic history.",
+            "author": "\ud83d\udc7dhayley\ud83d\udc7d"
+          },
+          {
+            "text": "could use some more of ben affleck saying \u201cmy wife\u201d in borat voice but other than that it\u2019s pretty good",
+            "author": "Karsten"
+          },
+          {
+            "text": "that shot of ben affleck's dick is the worst directorial decision fincher has ever made",
+            "author": "sophie"
+          }
+        ]
+      }
+    ],
+    "friday": [
+      {
+        "id": 203,
+        "date": "2026-10-30",
+        "day": "friday",
+        "slug": "memoir-of-a-snail",
+        "title": "Memoir of a Snail",
+        "year": 2024,
+        "genres": [
+          "Comedy",
+          "Drama",
+          "Animation",
+          "Moving relationship stories",
+          "Humanity and the world around us",
+          "Powerful stories of heartbreak and suffering",
+          "Heartfelt and sentimental family stories",
+          "Fascinating, emotional stories and documentaries",
+          "Captivating relationships and charming romance",
+          "Surreal and thought-provoking visions of life and death"
+        ],
+        "directors": [
+          "Adam Elliot"
+        ],
+        "cast": [
+          "Sarah Snook",
+          "Kodi Smit-McPhee",
+          "Jacki Weaver",
+          "Magda Szubanski",
+          "Dominique Pinon"
+        ],
+        "link": "https://letterboxd.com/film/memoir-of-a-snail/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/9/5/9/8/2/9/959829-memoir-of-a-snail-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "that\u2019s not claymation, that\u2019s just how australia looks",
+            "author": "corey\ud83d\udc7b"
+          },
+          {
+            "text": "everyone was just straight up not having a good time",
+            "author": "liam f"
+          },
+          {
+            "text": "Snails can\u2019t move backwards. The muscles in their foot can only wave in one direction. They could make long and gradual u-turns, I suppose, but they can\u2019t reverse over the slime trails behind them, which they use for communicating with each other and finding their way back home. In that sense, these slow-motion gastropods are the living, oozing embodiment of what S\u00f8ren Kierkegaard once wrote about the world as we experience it: \u201cLife can only be understood backwards, but we\u2026",
+            "author": "davidehrlich"
+          },
+          {
+            "text": "asking my psychiatrist to up my dose of prozac after this",
+            "author": "zo\u00eb rose bryant"
+          },
+          {
+            "text": "we need to stop funding the military and start funding more stop motion animation",
+            "author": "Mia K."
+          },
+          {
+            "text": "Just when you think it\u2019s too bleak to make it, it pivots. Which is kinda the point. That and a world record for stop-motion nudity.",
+            "author": "Brian Tallerico"
+          },
+          {
+            "text": "So I just watched snail porn with my family on Christmas Day",
+            "author": "Jo"
+          },
+          {
+            "text": "Pinky's letter to Grace made me finally want to live my life.",
+            "author": "Ghazal"
+          },
+          {
+            "text": "Became 10x more enjoyable when i found out from Adam Elliot that they used \u201csex lube\u201d as the tears",
+            "author": "\ud83c\udf83zac.blonded\ud83c\udf83"
+          },
+          {
+            "text": "Nothing like what I expected. Yeah why shouldn't this cute looking stop motion movie rip my heart out of my chest and stomp all over it. Didn't even know that was Sarah Snook until the credits rolled, is there nothing she can't do fr. Yeah I don't know man, I'm empty and drained but also filled with hope at the same time. The kind of movie Animation Is Cinema\u2122 people will never watch and that's how you know it's great",
+            "author": "James (Schaffrillas)"
+          }
+        ]
+      }
+    ],
+    "saturday": [
+      {
+        "id": 204,
+        "date": "2026-10-31",
+        "day": "saturday",
+        "slug": "au-revoir-les-enfants",
+        "title": "Au Revoir les Enfants",
+        "year": 1987,
+        "genres": [
+          "Drama",
+          "War",
+          "Moving relationship stories",
+          "War and historical adventure",
+          "Student coming-of-age challenges",
+          "Nazis and World War II",
+          "Emotional teen coming-of-age stories",
+          "Emotional and heartfelt family dramas",
+          "Powerful stories of heartbreak and suffering"
+        ],
+        "directors": [
+          "Louis Malle"
+        ],
+        "cast": [
+          "Gaspard Manesse",
+          "Raphael Fejt\u00f6",
+          "Francine Racette",
+          "Stanislas Carr\u00e9 de Malberg",
+          "Philippe Morier-Genoud"
+        ],
+        "link": "https://letterboxd.com/film/au-revoir-les-enfants/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/5/0/7/9/6/50796-au-revoir-les-enfants-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "I feel so empty inside.",
+            "author": "Tom Brady"
+          },
+          {
+            "text": "why do they talk like that",
+            "author": "chance."
+          },
+          {
+            "text": "that's one fucked up title for a movie",
+            "author": "meyi"
+          },
+          {
+            "text": "Malle's coming-of-a-terrible-age. a palpably personal film.",
+            "author": "shookone"
+          },
+          {
+            "text": "This broke me. Absolutely heartbreaking that this is based off of real events. On top of that, with everything going on in the world at the moment, this film feels more relevant than ever. In the words of Pitirim Sorokin: 'Hate begets hate, violence engenders violence, hypocrisy is answered by hypocrisy, war generates war, and love creates love.'",
+            "author": "JB"
+          },
+          {
+            "text": "I\u2019m the only one in this school who thinks about death. A powerful story that slowly reveals it\u2019s cards as the tension quietly builds to a heartbreaking conclusion. My favorite scene is when the boys are shown a Charlie Chaplin short with a live piano and violin score. Can you imagine what that would have been like to watch at that time and in that environment? Incredible.",
+            "author": "\ud83d\udcc0 Cammmalot \ud83d\udcc0"
+          },
+          {
+            "text": "Carefully takes its time setting up the characters, the school and the period in which these events are taking place. While Louis Malle is telling his semi-autobiographical film, he never lets us forget the threats of danger hovering over every moment. You know where it\u2019s heading but it still packs an emotional wallop in its final moments.",
+            "author": "Matt Neglia"
+          },
+          {
+            "text": "Louis Malle is fast becoming one of my favorite directors. This was such a quiet and powerful movie. I don\u2019t even want to say much because I think it\u2019s best to go in with no prior knowledge of the story, but I will say that the ending is incredible. The child performances are amazing as well, particularly the actor who played Julien. His moral journey in the film is mostly internal, yet his complicated feelings were never inaccessible to the\u2026",
+            "author": "Ethan Colburn"
+          },
+          {
+            "text": "In 1987 Louis Malle would direct, write and produce this film with a lot of devotion, why? It is and was his most personal work since it is based on his own life, besides being the first of the four films he made after his return from the United States, a great comeback since it would give him again the recognition of great renowned awards such as the Oscar, Golden Lion in Venice and the Cesar. The film marked the\u2026",
+            "author": "Mario Melendez"
+          },
+          {
+            "text": "For a film as slow and at times depressing as this, I\u2019m thoroughly pleased by how it managed to hold my attention the entire time. Calling it one big buildup wouldn\u2019t be disingenuous, although Louis Malle was sharing his childhood memories in the most mundane of ways. It was on purpose as you got to go through their everyday lives which tend to be less dramatic and uneventful, so when you get to that big climax it hits that much\u2026",
+            "author": "Kunga Sagar"
+          }
+        ]
+      }
+    ],
+    "sunday": [
+      {
+        "id": 205,
+        "date": "2026-11-01",
+        "day": "sunday",
+        "slug": "moral",
+        "title": "Moral",
+        "year": 1982,
+        "genres": [
+          "Drama"
+        ],
+        "directors": [
+          "Marilou Diaz-Abaya"
+        ],
+        "cast": [
+          "Lorna Tolentino",
+          "Gina Alajar",
+          "Sandy Andolong",
+          "Anna Marin",
+          "Juan Rodrigo"
+        ],
+        "link": "https://letterboxd.com/film/moral/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/1/7/7/6/1/3/177613-moral-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "this is my little women, my the godfather, my joker, my spiderman no way home, my scream, my twilight, my pulp fiction, my\u2014",
+            "author": "ian"
+          },
+          {
+            "text": "Flawed, problematic, illicit, full of complications. A quintessential portrait of the Filipina laid bare, her stories still bleed into the present.",
+            "author": "\ud83c\udf83spooky allain\u2661\ud83c\udf83"
+          },
+          {
+            "text": "tangina ang ganda namanwe owe these women an apology because the Philippines did not get more progressive 40 years after",
+            "author": "cokekasalo"
+          },
+          {
+            "text": "putangina ang ganda!!!!! my... my new personality",
+            "author": "hani"
+          },
+          {
+            "text": "so progressive it made my head spin! tackles taboo topics without shock value and weaves them into plot and character development seamlessly! sisterhood of the traveling pants found dead in a ditch! messy UPD women represent!",
+            "author": "Fiel"
+          },
+          {
+            "text": "Is it bad to love too much? Is it bad to have casual sex? Is it bad to be different from what people expect? Or is society just too quick to judge women? And when men do the same things, people stay quiet. Instead of telling this through one character, the film follows four women whose lives intersect. The film shows how society slowly develops prejudice against women and places strict expectations on them, while men are not held to\u2026",
+            "author": "Justin"
+          },
+          {
+            "text": "This is the earliest representation of intersectional feminism in cinema before the term even came to fruition. bell hooks and Audre Lorde would be immensely proud seeing their works reflected in the lives of these women.",
+            "author": "booboosnack"
+          },
+          {
+            "text": "Not Sandy Andolong dropping that bra in front of the school principal, thus starting the feminist movement in the country. Kathy, Sylvia, Maritess, and Joey walked so Susan, Bree, Lynette, and Gabrielle could set back feminism by decades gossiping about men and their neighbors over morning coffee. [True Colors Film Festival 2020]",
+            "author": "Terence Ang \u6d2a\u5049\u51f1"
+          },
+          {
+            "text": "Wives, submit yourselves into your husbands, as Christ is the savior of the church and the savior of the body Vintage pinoy feminist/bodily autonomy centric buddy movie... having seen Marilou Diaz-Abaya'sBrutallast year, this is a more optimistic look at some of the same themes. There's the same focus on female solidarity in both films, but while patriarchal control is shown as a war to fight with violence (the earlier film recallsA Question of Silenceeasily, albeit with\u2026",
+            "author": "dselwyns"
+          },
+          {
+            "text": "this film is so beautiful and so ahead of its time. Now I understand and no wonder this gets 5 stars and positive reviews everytime I see a mutual review this film and I always see this on someone's top 4. All female lead?? Female director?? during Martial Law?? hell yeah!!",
+            "author": "anthony"
+          }
+        ]
+      }
+    ]
+  }
+}
