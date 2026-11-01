@@ -1,0 +1,524 @@
+{
+  "movies": {
+    "monday": [
+      {
+        "id": 206,
+        "date": "2026-11-02",
+        "day": "monday",
+        "slug": "clayface",
+        "title": "Clayface",
+        "year": 2026,
+        "genres": [
+          "Thriller",
+          "Horror",
+          "Science Fiction"
+        ],
+        "directors": [
+          "James Watkins"
+        ],
+        "cast": [
+          "Tom Rhys Harries",
+          "Naomi Ackie",
+          "Eddie Marsan",
+          "Max Minghella",
+          "David Dencik"
+        ],
+        "link": "https://letterboxd.com/film/clayface/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/1/2/8/4/6/3/6/1284636-clayface-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "Clayvicular - The dangers of Looksmaxxing.",
+            "author": "Alucard"
+          },
+          {
+            "text": "imagine Batman having to deal with this shit on a random Friday",
+            "author": "anto"
+          },
+          {
+            "text": "always some bullshit happening in gotham",
+            "author": "lea \u2671"
+          },
+          {
+            "text": "this is how it feels waking up with crusty eyes",
+            "author": "OakeyReviews"
+          },
+          {
+            "text": "a pretty typical making-of-a-monster tale that verges on total disaster nearly every time two or more characters converse; the first 45 minutes or so are really rough. But, there are obviously some cool formal body-horror experiments here, clearly pulling from its many 80s and 90s inspirations. when it actually dives head first into the identity shifts and flesh-pulls in the final act, it's a lot of fun. Enjoyed the nightclub scene thoroughly.",
+            "author": "Sethsreviews"
+          },
+          {
+            "text": "sometimes you just gotta go clay mode",
+            "author": "David Sims"
+          },
+          {
+            "text": "the substance but for dc fans",
+            "author": "lea \u0f09\u2027\u208a\u02da\ud83e\udebd\ud83d\udd6f\ufe0f \u1a5a"
+          },
+          {
+            "text": "I actually think this is better than Joker. Tom Rhys Harries is awesome in this role. Some of the side performances aren\u2019t great, but still kinda work in this slasher esque vibe. The pacing is super fast at the beginning, but I don\u2019t mind it cause it lets us get to the core of this story faster. And once this film starts getting crazy, it just keeps escalating. Multiple memorable set pieces with the club, airplane, an movie set. Just rips.",
+            "author": "Joel"
+          },
+          {
+            "text": "You\u2019ve heard of the beach that makes you old, get ready for the AI skin cells that make you Eddie Marsan",
+            "author": "Sydney\ud83d\ude80"
+          },
+          {
+            "text": "Felt like DC wanted to make The Fly but for babies and to their credit, they kind of did. Generic Mob Boss #3 as a villain led to an underwhelming climax and it should be illegal to underutilize Naomi Ackie, but there\u2019s enough goopy shit here that I had a good time.",
+            "author": "Joe A"
+          }
+        ]
+      }
+    ],
+    "tuesday": [
+      {
+        "id": 207,
+        "date": "2026-11-03",
+        "day": "tuesday",
+        "slug": "hocus-pocus",
+        "title": "Hocus Pocus",
+        "year": 1993,
+        "genres": [
+          "Comedy",
+          "Family",
+          "Fantasy",
+          "Crude humor and satire",
+          "Horror, the undead and monster classics",
+          "Kids' animated fun and adventure",
+          "Gags, jokes, and slapstick humor",
+          "Catchy songs and hilarious musical comedy",
+          "Funny jokes and crude humor",
+          "Spooky, scary comedy"
+        ],
+        "directors": [
+          "Kenny Ortega"
+        ],
+        "cast": [
+          "Omri Katz",
+          "Thora Birch",
+          "Vinessa Shaw",
+          "Bette Midler",
+          "Sarah Jessica Parker"
+        ],
+        "link": "https://letterboxd.com/film/hocus-pocus/",
+        "poster": "https://a.ltrbxd.com/resized/sm/upload/43/5h/8q/cg/vgtJwl5rmPyq0JQPNWd4NXbkGmd-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "this film invented halloween",
+            "author": "marta"
+          },
+          {
+            "text": "Guinness World Record holder for most uses of the word \"virgin\" per minute in a family movie.",
+            "author": "FakeVoorhees"
+          },
+          {
+            "text": "within the first 5 minutes of this film a little girl is murdered, a boy is violently turned into an animal, and three women are literally hanged til death\u2026 TALK ABOUT SPOOKY FAMILY FUN \ud83e\udd2a\ud83d\udc7b\ud83c\udf83",
+            "author": "Reece"
+          },
+          {
+            "text": "Hello, I want my book. Bonjour, je veux mon livre.",
+            "author": "Chris Vall\u00e9e"
+          },
+          {
+            "text": "the way that this entire movie\u2019s plot revolves around a high school boy being a virgin and they don\u2019t let you forget it",
+            "author": "sawah \ud83e\udd96"
+          },
+          {
+            "text": "Imagine lighting the candle and everyone finding out you\u2019re a virgin.",
+            "author": "Shauna"
+          },
+          {
+            "text": "when i first watched this film as a kid, i asked my dad what a virgin was and he told me it was a person from virginia",
+            "author": "trashy cinephile"
+          },
+          {
+            "text": "Sarah Sanderson please reject me so I can move on",
+            "author": "Rory"
+          },
+          {
+            "text": "Bette Midler didn\u2019t have to snap that hard in I Put A Spell on You, but she did. She did that for us.",
+            "author": "p e r s i a \ud83c\udf52"
+          },
+          {
+            "text": "i see the words \"directed by kenny ortega\" and i know im about to watch a banger",
+            "author": "siobhan"
+          }
+        ]
+      }
+    ],
+    "wednesday": [
+      {
+        "id": 208,
+        "date": "2026-11-04",
+        "day": "wednesday",
+        "slug": "eternal-sunshine-of-the-spotless-mind",
+        "title": "Eternal Sunshine of the Spotless Mind",
+        "year": 2004,
+        "genres": [
+          "Science Fiction",
+          "Romance",
+          "Drama",
+          "Humanity and the world around us",
+          "Moving relationship stories",
+          "Relationship comedy",
+          "Dreamlike, quirky, and surreal storytelling",
+          "Heartfelt and sentimental family stories",
+          "Surreal and thought-provoking visions of life and death",
+          "Captivating relationships and charming romance",
+          "Powerful stories of heartbreak and suffering"
+        ],
+        "directors": [
+          "Michel Gondry"
+        ],
+        "cast": [
+          "Jim Carrey",
+          "Kate Winslet",
+          "Kirsten Dunst",
+          "Mark Ruffalo",
+          "Elijah Wood"
+        ],
+        "link": "https://letterboxd.com/film/eternal-sunshine-of-the-spotless-mind/",
+        "poster": "https://a.ltrbxd.com/resized/sm/upload/ay/bp/kl/1y/uBfQ7IGpi0jXSP3GPCzp9Pzm10v-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "this also happened when i dyed my hair",
+            "author": "Karsten"
+          },
+          {
+            "text": "ah yes my favorite genre of film pain",
+            "author": "\u202e\ud83d\udc0c\u202c"
+          },
+          {
+            "text": "is this what it\u2019s like to watch Before Sunrise on crack?",
+            "author": "rudi"
+          },
+          {
+            "text": "this dream isn\u2019t feeling sweet we\u2019re reeling through the midnight streets\u00a0and i\u2019ve never felt more alone it feels so scary getting old :-(",
+            "author": "\u02d7\u02cf\u02cb suspirliam \u02ca\u02ce\u02d7"
+          },
+          {
+            "text": "That woman that called asking for the procedure three times in one month? That\u2019s me.",
+            "author": "adambolt"
+          },
+          {
+            "text": "83 \"Please let me keep this memory. Just this one.\" Science fiction and regret.",
+            "author": "SilentDawn"
+          },
+          {
+            "text": "me and the bad bitch i pulled by altering her brain chemistry and replicating the actions of her previous boyfriend",
+            "author": "jeaba"
+          },
+          {
+            "text": "clementine kruczynski walked so ramona flowers could run",
+            "author": "owen"
+          },
+          {
+            "text": "imagine ever wanting to erase kate winslet from your memory...... can't relate",
+            "author": "clara"
+          },
+          {
+            "text": "\u201cI wish I\u2019d stayed. I wish I\u2019d done a lot of things.\u201d My favourite Kaufman script. One of my favourite ever scores. Feels raw and sad and scary and foolishly hopeful and all the things you\u2019re warned about, but run head first into anyway. You can\u2019t know about what\u2019s worth having or not until you\u2019ve had it - by which point, there\u2019s no way to imagine being who you are, surviving what\u2019s still to come, without it.",
+            "author": "Ella Kemp"
+          }
+        ]
+      }
+    ],
+    "thursday": [
+      {
+        "id": 209,
+        "date": "2026-11-05",
+        "day": "thursday",
+        "slug": "captain-america-the-winter-soldier",
+        "title": "Captain America: The Winter Soldier",
+        "year": 2014,
+        "genres": [
+          "Adventure",
+          "Science Fiction",
+          "Action",
+          "High speed and special ops",
+          "Epic heroes",
+          "War and historical adventure",
+          "Superheroes in action-packed battles with villains",
+          "Explosive and action-packed heroes vs. villains",
+          "Exciting spy thrillers with tense intrigue",
+          "Intense political and terrorist thrillers",
+          "Action comedy and silly heroics"
+        ],
+        "directors": [
+          "Joe Russo",
+          "Anthony Russo"
+        ],
+        "cast": [
+          "Chris Evans",
+          "Samuel L. Jackson",
+          "Scarlett Johansson",
+          "Robert Redford",
+          "Sebastian Stan"
+        ],
+        "link": "https://letterboxd.com/film/captain-america-the-winter-soldier/",
+        "poster": "https://a.ltrbxd.com/resized/sm/upload/he/p6/cc/lg/zt6b493XEL2OQ1bCSKccZ7V0iRY-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "the Gay energy that this movie possesses,, the Gayness jumped out. there is not a single straight person in this",
+            "author": "andrea\ud83c\udf39"
+          },
+          {
+            "text": "the metal arm: *makesthatsound*me: that\u2019s so \ud835\udcfc\ud835\udcee\ud835\udd01\ud835\udd02 do it again",
+            "author": "adrie"
+          },
+          {
+            "text": "there's no heterosexual explanation for this",
+            "author": "Nico Hoffmann"
+          },
+          {
+            "text": "i can quote this entire movie i really hate myself but anyways... gay rights!",
+            "author": "ciara"
+          },
+          {
+            "text": "When your ex boyfriend comes back into your life and starts causing trouble but you still love him \ud83d\udc94",
+            "author": "\u2022lily\u2022"
+          },
+          {
+            "text": "\"even when i had nothing\" brain damage",
+            "author": "sree"
+          },
+          {
+            "text": "ve shot him in ze legs because his shield is ze size of a dinner plate and he's an idiot",
+            "author": "issy \ud83e\udd5d"
+          },
+          {
+            "text": "i know it's been said before but you better believe that i would repeatedly die for sebastian stan",
+            "author": "shannon"
+          },
+          {
+            "text": "at this point i wouldn\u2019t be surprised if chris evans just straight up murdered donald trump",
+            "author": "sophie"
+          },
+          {
+            "text": "i love \u201csteve rogers: bucky barnes\u201d (2014) directed by joe and anthony russo",
+            "author": "adrie"
+          }
+        ]
+      }
+    ],
+    "friday": [
+      {
+        "id": 210,
+        "date": "2026-11-06",
+        "day": "friday",
+        "slug": "how-to-train-your-dragon",
+        "title": "How to Train Your Dragon",
+        "year": 2010,
+        "genres": [
+          "Fantasy",
+          "Family",
+          "Adventure",
+          "Animation",
+          "Epic heroes",
+          "Adorable animals and heartwarming families",
+          "Kids' animated fun and adventure",
+          "Fairy-tale fantasy and enchanted magic",
+          "Emotional and captivating fantasy storytelling",
+          "Fantasy adventure, heroism, and swordplay"
+        ],
+        "directors": [
+          "Dean DeBlois",
+          "Chris Sanders"
+        ],
+        "cast": [
+          "Jay Baruchel",
+          "Gerard Butler",
+          "Craig Ferguson",
+          "America Ferrera",
+          "Jonah Hill"
+        ],
+        "link": "https://letterboxd.com/film/how-to-train-your-dragon/",
+        "poster": "https://a.ltrbxd.com/resized/sm/upload/0r/r7/c6/7e/hIXX3IRFy0InUOmYeWjvhCAgQNj-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "i love the way that the dragons are literally just cats",
+            "author": "jeaba"
+          },
+          {
+            "text": "when the score goes duumm duumm dum de dum.. dum dum dum de dum..da da da da da da dum...and they\u2019re flyin...my heart...she soars",
+            "author": "jack \u273f"
+          },
+          {
+            "text": "It\u2019s been nearly a decade and the test drive scene still gives me chills.",
+            "author": "Walker Rutter"
+          },
+          {
+            "text": "some of you didn't see this film in 3D at the cinemas and it shows",
+            "author": "liam f"
+          },
+          {
+            "text": "A movie adaption that uses nothing but names from the original book and more or less completely changes the story, and yet is not only fantastic but manages to stand on its own... What parallel dimension am I in help",
+            "author": "adambolt"
+          },
+          {
+            "text": "why does every character in this movie sound like they're voiced by jonah hill",
+            "author": "jeaba"
+          },
+          {
+            "text": "Wtf why this movie so damn good? It's perfectly paced, incredibly powerful, striking from an animation perspective (save for a poorly rendered character here and there). Why did I never like this as a kid? It's the best DreamWorks movie of 2010, the year that also gave us Megamind and Shrek 4. HOW DO YOU MANAGE THAT OUTPUT OF QUALITY IN THE SAME YEAR. SHARK TALE HAS NO EXCUSE ANYMORE",
+            "author": "James (Schaffrillas)"
+          },
+          {
+            "text": "john powell is one of the most underrated composers of our generation",
+            "author": "\u2606 sophie \u2606"
+          },
+          {
+            "text": "daenerys targaryen, mother of dragons, outsold by hiccup horrendous haddock iii",
+            "author": "siobhan"
+          },
+          {
+            "text": "that first flight of Hiccup and Toothless around Berk, their bond sealed by the pure freedom of soaring through open air and towards everlasting friendship euphoric",
+            "author": "nadine \ud83d\udd2a"
+          }
+        ]
+      }
+    ],
+    "saturday": [
+      {
+        "id": 211,
+        "date": "2026-11-07",
+        "day": "saturday",
+        "slug": "my-neighbor-totoro",
+        "title": "My Neighbor Totoro",
+        "year": 1988,
+        "genres": [
+          "Fantasy",
+          "Animation",
+          "Family",
+          "Moving relationship stories",
+          "Fairy-tale fantasy and enchanted magic",
+          "Emotional and captivating fantasy storytelling",
+          "Kids' animated fun and adventure",
+          "Adorable animals and heartwarming families",
+          "Holiday joy and heartwarming Christmas"
+        ],
+        "directors": [
+          "Hayao Miyazaki"
+        ],
+        "cast": [
+          "Noriko Hidaka",
+          "Chika Sakamoto",
+          "Hitoshi Takagi",
+          "Shigesato Itoi",
+          "Sumi Shimamoto"
+        ],
+        "link": "https://letterboxd.com/film/my-neighbor-totoro/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/4/7/7/5/6/47756-my-neighbor-totoro-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "No plot.No central character.No antagonist.No defined purpose for side characters.No threat.No three acts.No jokes.No punchlines.No explanations.No internal references.No catchphrases.No political polemical voice.No melodrama.No lessons.No beginning.No end.One of the best films ever made.",
+            "author": "David Jenkins"
+          },
+          {
+            "text": "broke: buses, cars, airplanes, boats, trains, metros, subways, lyfts, ubers woke: catbus",
+            "author": "lauren"
+          },
+          {
+            "text": "[furiously clutches ear of corn]",
+            "author": "fran hoepfner"
+          },
+          {
+            "text": "don\u2019t take my word for it but i have a feeling that this was the film that invented magic",
+            "author": "aliyah"
+          },
+          {
+            "text": "here\u2019s the thing. what if a big ol guy was your friend",
+            "author": "lubchansky"
+          },
+          {
+            "text": "how totoro looks: \ud83d\ude38\ud83d\udc95\u2728how totoro sounds: \ud83d\udc79\ud83d\udc7a\ud83d\udd0a",
+            "author": "jeaba"
+          },
+          {
+            "text": "snorlax napped so totoro could snore",
+            "author": "\u2661 olivia \u2661"
+          },
+          {
+            "text": "I love how Totoro calls the cat bus for Satsuki and then he's like \"Alright, I ain't getting on that shit, my work here is done, peace\"",
+            "author": "James (Schaffrillas)"
+          },
+          {
+            "text": "now Miyazaki did the Catbusreallyneed to have balls",
+            "author": "adambolt"
+          },
+          {
+            "text": "Even at thirty or so years later, Studio Ghibli\u2019s animation is still more vibrant and lustrous than most family movies today \u2014 passion and ingenuity are keywords to this. It\u2019s also thanks to Miyazaki, who has an undeniably rare and crazy depth for creativity. I just can\u2019t wait to discover more of his other works. The movie has no beginning or end, yet nothing feels like a waste of time. It\u2019s wholesome, it\u2019s engaging, and it grants you a sense of joy and hope. It truly knows how to warm you up.",
+            "author": "san"
+          }
+        ]
+      }
+    ],
+    "sunday": [
+      {
+        "id": 212,
+        "date": "2026-11-08",
+        "day": "sunday",
+        "slug": "blue-mountains-or-an-unbelievable-story",
+        "title": "Blue Mountains, or an Unbelievable Story",
+        "year": 1983,
+        "genres": [
+          "Drama",
+          "Comedy"
+        ],
+        "directors": [
+          "Eldar Shengelaia"
+        ],
+        "cast": [
+          "Ramaz Giorgobiani",
+          "Teimuraz Chirgadze",
+          "Vasil Kakhniashvili",
+          "Ivane Sakvarelidze",
+          "Sesilia Takaishvili"
+        ],
+        "link": "https://letterboxd.com/film/blue-mountains-or-an-unbelievable-story/",
+        "poster": "https://a.ltrbxd.com/resized/film-poster/1/0/8/6/9/5/108695-blue-mountains-or-unbelievable-story-0-600-0-900-crop.jpg",
+        "reviews": [
+          {
+            "text": "The og \u201cI ain\u2019t reading allat\u201d",
+            "author": "keta."
+          },
+          {
+            "text": "i don't know what kept him sane in this infinite loop of foolishness",
+            "author": "crazyalous"
+          },
+          {
+            "text": "rip albert camus you would have loved this film",
+            "author": "stormyphrog"
+          },
+          {
+            "text": "More people should check out the cracks in their ceiling. Fewer people should make movies about them.",
+            "author": "Allison M. \ud83c\udf31"
+          },
+          {
+            "text": "Maybe the only reason why this movie was not banned during soviet times is that it was neglected by officials just like Soso's manuscript.",
+            "author": "Maddie"
+          },
+          {
+            "text": "rest in peace to the man who turned bureaucratic absurdity into timeless art.",
+            "author": "gvanca"
+          },
+          {
+            "text": "Soso is just a chill guy",
+            "author": "tatka"
+          },
+          {
+            "text": "5 stars for Sesilia Takaishvili being the funniest person in this movie",
+            "author": "keta"
+          },
+          {
+            "text": "Though it drags it's feet a bit in its own resolute repetitiveness, Eldar Shengelaia's Blue Mountains is quite the fast paced political satire, which takes a dry-comedic (almost too dry at times) aim at the ineptitude of late Soviet bureaucracy. Made in 1983 the literal and symbolic collapse of the office building in the final act boldly comments on how the Soviet Union was functioning at the time, while also foreshadowing what was to come of the Eastern Bloc (and\u2026",
+            "author": "Zach Nabors"
+          },
+          {
+            "text": "Pretty solid but as a critique of the bureaucratic incompetency and frustrations, I'd rather watchDeath of a Bureaucrat.",
+            "author": "Avirup"
+          }
+        ]
+      }
+    ]
+  }
+}
